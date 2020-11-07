@@ -1,18 +1,16 @@
 const products = require('../products.json');
 
-const whatIsMoreExpensive = array => {
-  let socksTotalPrice = 0;
-  let hatsTotalPrice = 0;
+const whichIsMostExpensive = array => {
+  let highestPriceElement = {};
+  let highestPrice = Number.EPSILON;
   array.forEach(element => {
-    if (element.type === 'socks') {
-      socksTotalPrice += +element.priceForPair.slice(1) * (element.quantity || 0);
-    }
-    if (element.type === 'hat') {
-      hatsTotalPrice += +element.price.slice(1) * (element.quantity || 0);
+    let totalPrice = +(element.priceForPair || element.price).slice(1) * (element.quantity || 0);
+    if (totalPrice > highestPrice) {
+      highestPriceElement = Object.assign(element);
+      highestPrice = totalPrice;
     }
   });
-  if (socksTotalPrice > hatsTotalPrice) return `socks ${socksTotalPrice}`;
-  return `hats ${hatsTotalPrice}`;
-};
+  return highestPriceElement;
+}
 
-module.exports = whatIsMoreExpensive(products);
+module.exports = whichIsMostExpensive(products);
