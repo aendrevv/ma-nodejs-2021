@@ -1,0 +1,11 @@
+# root
+GET http://localhost:5000/
+###
+GET http://localhost:5000/teapot
+###
+GET http://localhost:5000/task2
+###
+GET http://localhost:5000/task3
+###
+GET http://localhost:5000/task1?field=type&value=socks
+###

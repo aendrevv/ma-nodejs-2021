@@ -1,4 +1,4 @@
-const { home, comment } = require('./controller');
+const { home, teapot, task1, task2, task3 } = require('./controller');
 
 function notFound(res) {
   res.setHeader('Content-Type', 'application/json');
@@ -8,9 +8,14 @@ function notFound(res) {
 }
 
 module.exports = (request, response) => {
-  const { url, method, queryParams, body: data } = request;
+  const { url, method, queryParams } = request;
 
   if (method === 'GET' && url === '/') return home(response);
-  if (method === 'POST' && url === '/comment') return comment(data, response, queryParams);
+  if (method === 'GET' && url === '/teapot') return teapot(response);
+  if (method === 'GET' && url === `/task1?field=${queryParams.field}&value=${queryParams.value}`)
+    return task1(response, queryParams);
+  if (method === 'GET' && url === '/task2') return task2(response);
+  if (method === 'GET' && url === '/task3') return task3(response);
+
   return notFound(response);
 };

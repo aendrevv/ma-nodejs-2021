@@ -5,7 +5,7 @@
   "version": "1.0.0",
   "description": "MA Node.js 2021 Homework 02",
   "scripts": {
-    "start": "node ./src/app.js"
+    "start": "nodemon ./src/app.js"
   },
   "repository": {
     "type": "git",
