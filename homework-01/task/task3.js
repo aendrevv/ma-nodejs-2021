@@ -1,12 +1,12 @@
 const arrayModifier = array => {
   return array.map(element => {
-    const elementTemplate = {};
-    elementTemplate.type = element.type;
-    elementTemplate.color = element.color;
-    elementTemplate.quantity = element.quantity || 0;
-    elementTemplate.price = element.price || element.priceForPair;
+    if (!element.quantity) element.quantity = 0;
+    if (element.priceForPair) {
+      element.price = element.priceForPair;
+      delete element.priceForPair;
+      }
 
-    return elementTemplate;
+    return element;
   })
 };
 
