@@ -1,19 +1,13 @@
-const propEditor = array => {
-  array.forEach(element => {
-    if (!element.quantity) {
-      Object.defineProperty(element, 'quantity', {
-        value: 0,
-        writable: true,
-        configurable: true,
-        enumerable: true
-      });
-    }
+const arrayModifier = (array) => {
+  return array.map((element) => {
+    if (!element.quantity) element.quantity = 0;
     if (element.priceForPair) {
-      Object.defineProperty(element, 'price', Object.getOwnPropertyDescriptor(element, 'priceForPair'));
+      element.price = element.priceForPair;
       delete element.priceForPair;
     }
+
+    return element;
   });
-  return array;
 };
 
-module.exports = propEditor;
+module.exports = arrayModifier;
