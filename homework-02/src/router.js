@@ -11,10 +11,14 @@ module.exports = (request, response) => {
   const { url, method, queryParams } = request;
 
   if (method === 'GET' && url === '/') return home(response);
+
   if (method === 'GET' && url === '/teapot') return teapot(response);
+
   if (method === 'GET' && url === `/task1?field=${queryParams.field}&value=${queryParams.value}`)
     return task1(response, queryParams);
+
   if (method === 'GET' && url === '/task2') return task2(response);
+
   if (method === 'GET' && url === '/task3') return task3(response);
 
   return notFound(response);

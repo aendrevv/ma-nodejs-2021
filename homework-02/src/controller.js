@@ -45,4 +45,5 @@ const task3 = async (response) => {
     response.end(JSON.stringify({ message: `Internal error occured` }));
   }
 };
+
 module.exports = { home, teapot, task1, task2, task3 };
