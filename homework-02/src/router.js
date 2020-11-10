@@ -1,14 +1,16 @@
-const { home, teapot, task1, task2, task3 } = require('./controller');
-
-function notFound(res) {
-  res.setHeader('Content-Type', 'application/json');
-  res.statusCode = 404;
-  res.write('404 Not Found');
-  res.end();
-}
+const {
+  home,
+  notFound,
+  teapot,
+  task1,
+  task2,
+  task3,
+  downloadNewDataArray,
+  downloadAndSaveNewDataArray,
+} = require('./controller');
 
 module.exports = (request, response) => {
-  const { url, method, queryParams } = request;
+  const { url, method, queryParams, body: data } = request;
 
   if (method === 'GET' && url === '/') return home(response);
 
@@ -20,6 +22,12 @@ module.exports = (request, response) => {
   if (method === 'GET' && url === '/task2') return task2(response);
 
   if (method === 'GET' && url === '/task3') return task3(response);
+
+  if (method === 'POST' && url === '/downloadNewDataArray')
+    return downloadNewDataArray(data, response);
+
+  if (method === 'POST' && url === '/downloadAndSaveNewDataArray')
+    return downloadAndSaveNewDataArray(data, response);
 
   return notFound(response);
 };

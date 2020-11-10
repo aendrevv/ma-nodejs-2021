@@ -9,3 +9,21 @@ GET http://localhost:5000/task3
 ###
 GET http://localhost:5000/task1?field=type&value=socks
 ###
+POST http://localhost:5000/downloadNewDataArray HTTP/1.1
+content-type: application/json
+
+[
+  {"type": "boots", "color": "white", "quantity": 18, "priceForPair": "$7.5"},
+  {"type": "cap", "color": "black", "quantity": 51, "priceForPair": "$1000"}
+]
+###
+POST http://localhost:5000/downloadAndSaveNewDataArray HTTP/1.1
+content-type: application/json
+
+[
+  {"type": "boots", "color": "white", "quantity": 14, "priceForPair": "$29.99"},
+  {"type": "cap", "color": "black", "quantity": 88, "price": "$19.99"},
+  {"type": "shirt", "color": "red", "quantity": 161, "price": "$9.99"},
+  {"type": "T-shirt", "color": "yellow", "quantity": 666, "price": "$0.99"}
+]
+###

@@ -22,6 +22,8 @@ homework-02
 
 10. Створити роут який буде переключати джерело даних ( JSON || store )
 
-11. Задачою із зірочкою буде редагування JSON файлу за інструкцією https://www.codegrepper.com/code-examples/delphi/how+to+edit+local+json+files+using+node , в такому випадку пункт 10 не потрібен
+11. Задачою із зірочкою буде редагування JSON файлу за інструкцією 
+    https://www.codegrepper.com/code-examples/delphi/how+to+edit+local+json+files+using+node , 
+    в такому випадку пункт 10 не потрібен
 
 #important #homework
