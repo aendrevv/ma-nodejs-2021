@@ -1,5 +1,5 @@
-const filter = (array, type, value) => {
+const filterByTypeAndValue = (array, type, value) => {
   return array.filter(item => item[type] === value);
 };
 
-module.exports = filter;
+module.exports = filterByTypeAndValue;
