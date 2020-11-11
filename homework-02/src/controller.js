@@ -4,7 +4,7 @@ const path = require('path');
 const { task1: task01, task2: task02, task3: task03 } = require('../task');
 const products = require('../products.json');
 
-let store = [];
+let store = {};
 
 const home = (response) => {
   response.end(`Home 🏠`);
@@ -55,10 +55,10 @@ const task3 = async (response) => {
   }
 };
 
-const downloadNewDataArray = async (data, response) => {
+const writeNewDataToVariable = async (data, response) => {
   try {
-    response.writeHead(200, { 'Content-Type': 'application/json' });
     store = data;
+    response.writeHead(200, { 'Content-Type': 'application/json' });
     await response.write(JSON.stringify(store));
     response.end();
   } catch (error) {
@@ -67,11 +67,11 @@ const downloadNewDataArray = async (data, response) => {
   }
 };
 
-const downloadAndSaveNewDataArray = async (data, response) => {
+const writeNewDataToJSON = async (data, response) => {
   try {
     response.writeHead(200, { 'Content-Type': 'application/json' });
-    fs.writeFileSync(path.resolve('./', 'store.json'), JSON.stringify(data));
-    await response.write(JSON.stringify({ message: `Done. Check store.json`, data }));
+    fs.writeFileSync(path.resolve('./', 'products.json'), JSON.stringify(data));
+    await response.write(JSON.stringify({ message: `Done. Check products.json`, data }));
     response.end();
   } catch (error) {
     response.writeHead(500, { 'Content-Type': 'application/json' });
@@ -86,6 +86,6 @@ module.exports = {
   task1,
   task2,
   task3,
-  downloadNewDataArray,
-  downloadAndSaveNewDataArray,
+  writeNewDataToVariable,
+  writeNewDataToJSON,
 };

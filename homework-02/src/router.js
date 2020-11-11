@@ -5,8 +5,8 @@ const {
   task1,
   task2,
   task3,
-  downloadNewDataArray,
-  downloadAndSaveNewDataArray,
+  writeNewDataToVariable,
+  writeNewDataToJSON,
 } = require('./controller');
 
 module.exports = (request, response) => {
@@ -23,11 +23,10 @@ module.exports = (request, response) => {
 
   if (method === 'GET' && url === '/task3') return task3(response);
 
-  if (method === 'POST' && url === '/downloadNewDataArray')
-    return downloadNewDataArray(data, response);
+  if (method === 'POST' && url === '/writeNewDataToVariable')
+    return writeNewDataToVariable(data, response);
 
-  if (method === 'POST' && url === '/downloadAndSaveNewDataArray')
-    return downloadAndSaveNewDataArray(data, response);
+  if (method === 'POST' && url === '/writeNewDataToJSON') return writeNewDataToJSON(data, response);
 
   return notFound(response);
 };
