@@ -12,10 +12,10 @@ module.exports = async (request, response) => {
     let body = [];
 
     request
-      .on('error', (err) => {
+      .on('error', err => {
         console.error(err);
       })
-      .on('data', (chunk) => {
+      .on('data', chunk => {
         body.push(chunk);
       })
       .on('end', () => {

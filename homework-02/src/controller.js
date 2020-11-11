@@ -6,18 +6,18 @@ const products = require('../products.json');
 
 let store = {};
 
-const home = (response) => {
+const home = response => {
   response.end(`Home 🏠`);
 };
 
-const notFound = (response) => {
+const notFound = response => {
   response.statusCode = 404;
   response.end('Not Found :(');
 };
 
-const teapot = (response) => {
+const teapot = response => {
   response.statusCode = 418;
-  response.write(`☕️ U know what it means xD`);
+  response.write(`U know what it means xD`);
   response.end();
 };
 
@@ -33,7 +33,7 @@ const task1 = async (response, queryParams) => {
   }
 };
 
-const task2 = async (response) => {
+const task2 = async response => {
   try {
     response.writeHead(200, { 'Content-Type': 'application/json' });
     await response.write(JSON.stringify(task02));
@@ -44,7 +44,7 @@ const task2 = async (response) => {
   }
 };
 
-const task3 = async (response) => {
+const task3 = async response => {
   try {
     response.writeHead(200, { 'Content-Type': 'application/json' });
     await response.write(JSON.stringify(task03(products)));
