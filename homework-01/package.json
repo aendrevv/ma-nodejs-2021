@@ -1,0 +1,22 @@
+{
+  "name": "homework-01",
+  "author": "Andrii Tolmachov",
+  "license": "MIT",
+  "version": "1.0.1",
+  "description": "MA Node.js 2021 Homework 01",
+  "scripts": {
+    "start": "node ./app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aendrevv/ma-nodejs-2021.git"
+  },
+  "devDependencies": {
+    "eslint": "^7.12.0",
+    "eslint-config-airbnb": "^18.2.0",
+    "eslint-config-prettier": "^6.14.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-prettier": "^3.1.4",
+    "prettier": "^2.1.2"
+  }
+}
