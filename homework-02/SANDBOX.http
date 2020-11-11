@@ -9,7 +9,7 @@ GET http://localhost:5000/task3
 ###
 GET http://localhost:5000/task1?field=type&value=socks
 ###
-POST http://localhost:5000/writeNewDataToVariable HTTP/1.1
+PUT http://localhost:5000/writeNewDataToVariable HTTP/1.1
 content-type: application/json
 
 [
@@ -17,7 +17,7 @@ content-type: application/json
   {"type": "cap", "color": "black", "quantity": 51, "priceForPair": "$1000"}
 ]
 ###
-POST http://localhost:5000/writeNewDataToJSON HTTP/1.1
+PUT http://localhost:5000/writeNewDataToJSON HTTP/1.1
 content-type: application/json
 
 [

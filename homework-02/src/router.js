@@ -23,10 +23,10 @@ module.exports = (request, response) => {
 
   if (method === 'GET' && url === '/task3') return task3(response);
 
-  if (method === 'POST' && url === '/writeNewDataToVariable')
+  if (method === 'PUT' && url === '/writeNewDataToVariable')
     return writeNewDataToVariable(data, response);
 
-  if (method === 'POST' && url === '/writeNewDataToJSON') return writeNewDataToJSON(data, response);
+  if (method === 'PUT' && url === '/writeNewDataToJSON') return writeNewDataToJSON(data, response);
 
   return notFound(response);
 };
