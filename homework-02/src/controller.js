@@ -6,6 +6,14 @@ const products = require('../products.json');
 
 let store = {};
 
+const isJsonString = str => {
+  try {
+    return JSON.parse(str) && !!str;
+  } catch (e) {
+    return false;
+  }
+};
+
 const home = response => {
   response.end(`Home 🏠`);
 };
@@ -25,7 +33,7 @@ const task1 = async (response, queryParams) => {
   try {
     const result = task01(products, queryParams.field, queryParams.value);
     response.writeHead(200, { 'Content-Type': 'application/json' });
-    await response.write(JSON.stringify(result));
+    response.write(JSON.stringify(result));
     response.end();
   } catch (error) {
     response.writeHead(500, { 'Content-Type': 'application/json' });
@@ -36,7 +44,7 @@ const task1 = async (response, queryParams) => {
 const task2 = async response => {
   try {
     response.writeHead(200, { 'Content-Type': 'application/json' });
-    await response.write(JSON.stringify(task02));
+    response.write(JSON.stringify(task02(products)));
     response.end();
   } catch (error) {
     response.writeHead(500, { 'Content-Type': 'application/json' });
@@ -47,7 +55,7 @@ const task2 = async response => {
 const task3 = async response => {
   try {
     response.writeHead(200, { 'Content-Type': 'application/json' });
-    await response.write(JSON.stringify(task03(products)));
+    response.write(JSON.stringify(task03(products)));
     response.end();
   } catch (error) {
     response.writeHead(500, { 'Content-Type': 'application/json' });
@@ -59,7 +67,7 @@ const writeNewDataToVariable = async (data, response) => {
   try {
     store = data;
     response.writeHead(200, { 'Content-Type': 'application/json' });
-    await response.write(JSON.stringify(store));
+    response.write(JSON.stringify(store));
     response.end();
   } catch (error) {
     response.writeHead(500, { 'Content-Type': 'application/json' });
@@ -70,7 +78,9 @@ const writeNewDataToVariable = async (data, response) => {
 const writeNewDataToJSON = async (data, response) => {
   try {
     response.writeHead(200, { 'Content-Type': 'application/json' });
-    fs.writeFileSync(path.resolve('./', 'products.json'), JSON.stringify(data));
+    if (isJsonString(data)) {
+      fs.writeFileSync(path.resolve('./', 'products.json'), JSON.stringify(data));
+    }
     await response.write(JSON.stringify({ message: `Done. Check products.json`, data }));
     response.end();
   } catch (error) {

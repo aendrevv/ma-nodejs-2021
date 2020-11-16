@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 const {
   home,
   notFound,
@@ -9,24 +10,39 @@ const {
   writeNewDataToJSON,
 } = require('./controller');
 
-module.exports = (request, response) => {
+// eslint-disable-next-line consistent-return
+const router = (request, response) => {
   const { url, method, queryParams, body: data } = request;
 
-  if (method === 'GET' && url === '/') return home(response);
+  if (url.startsWith('/task1') && method === 'GET') return task1(response, queryParams);
 
-  if (method === 'GET' && url === '/teapot') return teapot(response);
-
-  if (method === 'GET' && url === `/task1?field=${queryParams.field}&value=${queryParams.value}`)
-    return task1(response, queryParams);
-
-  if (method === 'GET' && url === '/task2') return task2(response);
-
-  if (method === 'GET' && url === '/task3') return task3(response);
-
-  if (method === 'PUT' && url === '/writeNewDataToVariable')
-    return writeNewDataToVariable(data, response);
-
-  if (method === 'PUT' && url === '/writeNewDataToJSON') return writeNewDataToJSON(data, response);
-
-  return notFound(response);
+  switch (url) {
+    case '/':
+      method === 'GET' ? home(response) : notFound(response);
+      break;
+    case '/teapot':
+      method === 'GET' ? teapot(response) : notFound(response);
+      break;
+    // i dont know why code below doesn't work, that's why there's string 17 above
+    // case `/task1${/\S*/}`:
+    //   method === 'GET' ? task1(response, queryParams) : notFound(response);
+    //   break;
+    case '/task2':
+      method === 'GET' ? task2(response) : notFound(response);
+      break;
+    case '/task3':
+      method === 'GET' ? task3(response) : notFound(response);
+      break;
+    case '/writeNewDataToVariable':
+      method === 'PUT' ? writeNewDataToVariable(data, response) : notFound(response);
+      break;
+    case '/writeNewDataToJSON':
+      method === 'PUT' ? writeNewDataToJSON(data, response) : notFound(response);
+      break;
+    default:
+      notFound(response);
+      break;
+  }
 };
+
+module.exports = router;

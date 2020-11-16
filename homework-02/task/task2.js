@@ -1,5 +1,3 @@
-const products = require('../products.json');
-
 const whichIsMostExpensive = array => {
   let highestPriceElement = {};
   let highestPrice = 0;
@@ -13,4 +11,4 @@ const whichIsMostExpensive = array => {
   return highestPriceElement;
 };
 
-module.exports = whichIsMostExpensive(products);
+module.exports = whichIsMostExpensive;
