@@ -6,44 +6,147 @@
 // Обгортки мають бути реалізовані двома способами.
 require('dotenv').config();
 
+const myMap = require('./myMap');
+
 const maxDiscount = +process.env.MAXDISCOUNT || 20;
-const delay = 50;
+const delay = +process.env.DELAY || 50;
 const errorMessage = `TOO BIG DISCOUNT!`;
 
-const discountGenerator = () => (Math.floor(Math.random() * 1e6) % 99) + 1;
+const randomNumberGenerator = () => Math.floor(Math.random() * 1e6) % 99;
 
-const callback = (err, data) => (err ? console.error(errorMessage) : data);
+// const callback = (err, data) => (err ? console.error(errorMessage) : data);
 
-const getDiscount = () => {
-  const currentDiscount = discountGenerator();
+const discountHandlerCallback = callback => {
+  const currentDiscount = randomNumberGenerator();
   setTimeout(() => {
-    if (currentDiscount >= maxDiscount) throw new Error(errorMessage);
+    if (currentDiscount > maxDiscount) return callback(new Error(errorMessage));
     return callback(null, currentDiscount);
   }, delay);
 };
 
-// getDiscount();
+// discountHandlerCallback();
+
+const discountHandlerPromise = () => {
+  const currentDiscount = randomNumberGenerator();
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (currentDiscount > maxDiscount) {
+        reject(new Error(errorMessage));
+      }
+
+      resolve(currentDiscount);
+    }, delay);
+  });
+};
+
+// discountHandlerPromise()
+//   .then(res => console.log(res))
+//   .catch(err => console.log(err));
+
+const getDiscountCallback = () => {
+  return discountHandlerCallback((error, result) => {
+    if (error) getDiscountCallback();
+    console.log(result);
+    return result;
+  });
+};
+
+// getDiscountCallback();
 
 const getDiscountPromise = () => {
-  const currentDiscount = discountGenerator();
-  return new Promise((resolve, reject) => {
-    if (currentDiscount >= maxDiscount) reject(new Error(errorMessage));
-    setTimeout(() => resolve(currentDiscount), delay);
-  });
+  let result;
+  discountHandlerPromise()
+    .then(resolve => {
+      result = resolve;
+    })
+    .catch(() => {
+      result = getDiscountPromise();
+    });
+
+  return result;
 };
 
 // getDiscountPromise();
 
 const getDiscountAsync = async () => {
+  let res;
   try {
-    const currentDiscount = await getDiscountPromise();
-    return currentDiscount;
+    res = await discountHandlerPromise();
   } catch (error) {
-    console.error(errorMessage);
-    return error;
+    res = await getDiscountAsync();
   }
+  return res;
 };
 
 // getDiscountAsync();
 
-module.exports = { getDiscount, getDiscountPromise, getDiscountAsync };
+const setDiscountAsync = async array => {
+  const returnedArr = await myMap(array, async element => {
+    try {
+      if (!element.quantity) element.quantity = 0;
+      if (element.priceForPair) {
+        element.price = element.priceForPair;
+        delete element.priceForPair;
+      }
+      element.discount = 1 - (await getDiscountAsync()) / 100;
+      if (element.type === 'hat') {
+        element.discount *= 1 - (await getDiscountAsync()) / 100;
+        if (element.color === 'red') {
+          element.discount *= 1 - (await getDiscountAsync()) / 100;
+        }
+      }
+      element.newPrice = +(element.price.slice(1) * element.discount).toFixed(2);
+      element.discount = `${((1 - element.discount) * 100).toFixed(0)}%`;
+    } catch (error) {
+      console.log('OOPS!');
+    }
+    return element;
+  });
+  return Promise.all(returnedArr);
+};
+
+// TODO
+const setDiscountPromise = async array => {
+  const returnedArr = await myMap(array, async element => {
+    if (!element.quantity) element.quantity = 0;
+    if (element.priceForPair) {
+      element.price = element.priceForPair;
+      delete element.priceForPair;
+    }
+    element.discount = 1 - getDiscountPromise() / 100;
+    // if (element.type === 'hat') {
+    //   element.discount *= 1 - (await getDiscountAsync()) / 100;
+    //   if (element.color === 'red') {
+    //     element.discount *= 1 - (await getDiscountAsync()) / 100;
+    //   }
+    // }
+    // element.newPrice = +(element.price.slice(1) * element.discount).toFixed(2);
+    // element.discount = `${((1 - element.discount) * 100).toFixed(0)}%`;
+    return element;
+  });
+  return Promise.all(returnedArr);
+};
+
+// TODO
+const setDiscountCallback = async array => {
+  const returnedArr = await myMap(array, async element => {
+    if (!element.quantity) element.quantity = 0;
+    if (element.priceForPair) {
+      element.price = element.priceForPair;
+      delete element.priceForPair;
+    }
+    element.discount = 1 - getDiscountCallback() / 100;
+    // if (element.type === 'hat') {
+    //   element.discount *= 1 - (await getDiscountAsync()) / 100;
+    //   if (element.color === 'red') {
+    //     element.discount *= 1 - (await getDiscountAsync()) / 100;
+    //   }
+    // }
+    // element.newPrice = +(element.price.slice(1) * element.discount).toFixed(2);
+    // element.discount = `${((1 - element.discount) * 100).toFixed(0)}%`;
+    return element;
+  });
+  return Promise.all(returnedArr);
+};
+
+module.exports = { setDiscountAsync, setDiscountPromise, setDiscountCallback };

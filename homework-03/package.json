@@ -2,8 +2,8 @@
   "name": "homework-03",
   "author": "Andrii Tolmachov",
   "license": "MIT",
-  "version": "1.0.0",
-  "description": "MA Node.js 2021 Homework 03",
+  "version": "1.0.2",
+  "description": "Callbacks, Promises, Async/await, Event Loop",
   "scripts": {
     "start": "nodemon ./src/app.js"
   },
