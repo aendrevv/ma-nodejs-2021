@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const products = require('../products.json');
-const { setDiscountAsync } = require('../task/discount');
+const { setDiscountAsync, setDiscountPromise } = require('../task/discount');
 
 let store = require('../products.json');
 
@@ -38,10 +38,23 @@ const blackFridayAsync = async response => {
     response.end(JSON.stringify({ message: `Internal error occured` }));
   }
 };
-
+const blackFridayPromise = async response => {
+  setDiscountPromise(products)
+    .then(resolve => {
+      store = resolve;
+      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.write(JSON.stringify(store));
+      response.end();
+    })
+    .catch(err => {
+      response.writeHead(500, { 'Content-Type': 'application/json' });
+      response.end(JSON.stringify({ message: err.message }));
+    });
+};
 module.exports = {
   home,
   notFound,
   writeNewDataToJSON,
   blackFridayAsync,
+  blackFridayPromise,
 };

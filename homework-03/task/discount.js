@@ -40,8 +40,6 @@ const discountHandlerPromise = () => {
 };
 
 // discountHandlerPromise()
-//   .then(res => console.log(res))
-//   .catch(err => console.log(err));
 
 const getDiscountCallback = () => {
   return discountHandlerCallback((error, result) => {
@@ -114,14 +112,14 @@ const setDiscountPromise = async array => {
       delete element.priceForPair;
     }
     element.discount = 1 - getDiscountPromise() / 100;
-    // if (element.type === 'hat') {
-    //   element.discount *= 1 - (await getDiscountAsync()) / 100;
-    //   if (element.color === 'red') {
-    //     element.discount *= 1 - (await getDiscountAsync()) / 100;
-    //   }
-    // }
-    // element.newPrice = +(element.price.slice(1) * element.discount).toFixed(2);
-    // element.discount = `${((1 - element.discount) * 100).toFixed(0)}%`;
+    if (element.type === 'hat') {
+      element.discount *= 1 - getDiscountPromise() / 100;
+      if (element.color === 'red') {
+        element.discount *= 1 - (await getDiscountAsync()) / 100;
+      }
+    }
+    element.newPrice = +(element.price.slice(1) * element.discount).toFixed(2);
+    element.discount = `${((1 - element.discount) * 100).toFixed(0)}%`;
     return element;
   });
   return Promise.all(returnedArr);

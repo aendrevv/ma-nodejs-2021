@@ -1,7 +1,14 @@
-const { home, notFound, writeNewDataToJSON, blackFridayAsync } = require('./controller');
+const {
+  home,
+  notFound,
+  writeNewDataToJSON,
+  blackFridayAsync,
+  blackFridayCallback,
+  blackFridayPromise,
+} = require('./controller');
 
 const router = async (request, response) => {
-  const { url, method, body: data } = request;
+  const { url, method, queryParams, body: data } = request;
 
   switch (url.pathname) {
     case '/':
@@ -10,8 +17,10 @@ const router = async (request, response) => {
     case '/writeNewDataToJSON':
       if (method === 'PUT') writeNewDataToJSON(data, response);
       break;
-    case `/blackFridayAsync`:
-      if (method === 'GET') await blackFridayAsync(response);
+    case `/blackFriday`:
+      if (method === 'GET' && queryParams.field === 'async') await blackFridayAsync(response);
+      if (method === 'GET' && queryParams.field === 'callback') blackFridayCallback(response);
+      if (method === 'GET' && queryParams.field === 'promise') blackFridayPromise(response);
       break;
     // case `/setDiscountAsync`:
     //   method === 'PUT' ? setDiscountAsync(response, queryParams) : notFound(response);
