@@ -14,19 +14,16 @@ const {
 const router = (request, response) => {
   const { url, method, queryParams, body: data } = request;
 
-  if (url.startsWith('/task1') && method === 'GET') return task1(response, queryParams);
-
-  switch (url) {
+  switch (url.pathname) {
     case '/':
       method === 'GET' ? home(response) : notFound(response);
       break;
     case '/teapot':
       method === 'GET' ? teapot(response) : notFound(response);
       break;
-    // i dont know why code below doesn't work, that's why there's string 17 above
-    // case `/task1${/\S*/}`:
-    //   method === 'GET' ? task1(response, queryParams) : notFound(response);
-    //   break;
+    case '/task1':
+      method === 'GET' ? task1(response, queryParams) : notFound(response);
+      break;
     case '/task2':
       method === 'GET' ? task2(response) : notFound(response);
       break;

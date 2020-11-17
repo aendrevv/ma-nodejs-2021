@@ -1,13 +1,13 @@
-const { parse: parseQuery } = require('querystring');
-const { URL } = require('url');
+const querystring = require('querystring');
+const url = require('url');
+
 const router = require('./router');
 
 module.exports = async (request, response) => {
   try {
-    const { url } = request;
-    // why not?
-    const parsedUrl = new URL(url, process.env.ORIGIN);
-    const queryParams = parseQuery(parsedUrl.search.substr(1));
+    const { url: urla } = request;
+    const parsedUrl = url.parse(urla);
+    const queryParams = querystring.decode(parsedUrl.query);
 
     let body = [];
 
@@ -25,7 +25,7 @@ module.exports = async (request, response) => {
           {
             ...request,
             body: body ? JSON.parse(body) : {},
-            url,
+            url: parsedUrl,
             queryParams,
           },
           response,

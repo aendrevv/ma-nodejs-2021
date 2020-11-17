@@ -2,8 +2,8 @@
   "name": "homework-02",
   "author": "Andrii Tolmachov",
   "license": "MIT",
-  "version": "1.0.2",
-  "description": "MA Node.js 2021 Homework 02",
+  "version": "1.0.3",
+  "description": "Node.js HTTP without frameworks",
   "scripts": {
     "start": "nodemon ./src/app.js"
   },
