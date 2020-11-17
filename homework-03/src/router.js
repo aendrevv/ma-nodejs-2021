@@ -7,6 +7,7 @@ const {
   task3,
   writeNewDataToVariable,
   writeNewDataToJSON,
+  setDiscountToAllProducts,
 } = require('./controller');
 
 module.exports = (request, response) => {
@@ -25,6 +26,9 @@ module.exports = (request, response) => {
 
   if (method === 'PUT' && url === '/writeNewDataToVariable')
     return writeNewDataToVariable(data, response);
+
+  if (method === 'PUT' && url === '/setDiscountToAllProducts')
+    return setDiscountToAllProducts(response);
 
   if (method === 'PUT' && url === '/writeNewDataToJSON') return writeNewDataToJSON(data, response);
 

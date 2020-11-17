@@ -79,6 +79,11 @@ const writeNewDataToJSON = async (data, response) => {
   }
 };
 
+const setDiscountToAllProducts = async (response) => {
+  response.writeHead(200, { 'Content-Type': 'application/json' });
+
+};
+
 module.exports = {
   home,
   notFound,
@@ -88,4 +93,5 @@ module.exports = {
   task3,
   writeNewDataToVariable,
   writeNewDataToJSON,
+  setDiscountToAllProducts,
 };
