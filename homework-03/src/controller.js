@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const products = require('../products.json');
-const { setDiscountAsync, setDiscountPromise } = require('../task/discount');
+const { setDiscountAsync, setDiscountPromise, setDiscountCallback } = require('../task/discount');
 
 let store = require('../products.json');
 
@@ -29,32 +29,42 @@ const writeNewDataToJSON = async (data, response) => {
 
 const blackFridayAsync = async response => {
   try {
-    response.writeHead(200, { 'Content-Type': 'application/json' });
     store = await setDiscountAsync(products);
-    response.write(JSON.stringify(store));
-    response.end();
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.end(JSON.stringify(store));
   } catch (error) {
     response.writeHead(500, { 'Content-Type': 'application/json' });
     response.end(JSON.stringify({ message: `Internal error occured` }));
   }
 };
+
 const blackFridayPromise = async response => {
-  setDiscountPromise(products)
-    .then(resolve => {
-      store = resolve;
-      response.writeHead(200, { 'Content-Type': 'application/json' });
-      response.write(JSON.stringify(store));
-      response.end();
-    })
-    .catch(err => {
-      response.writeHead(500, { 'Content-Type': 'application/json' });
-      response.end(JSON.stringify({ message: err.message }));
-    });
+  try {
+    store = await setDiscountPromise(products);
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.end(JSON.stringify(store));
+  } catch (error) {
+    response.writeHead(500, { 'Content-Type': 'application/json' });
+    response.end(JSON.stringify({ message: `Internal error occured` }));
+  }
 };
+
+const blackFridayCallback = async response => {
+  try {
+    store = await setDiscountCallback(products);
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.end(JSON.stringify(store));
+  } catch (error) {
+    response.writeHead(500, { 'Content-Type': 'application/json' });
+    response.end(JSON.stringify({ message: `Internal error occured` }));
+  }
+};
+
 module.exports = {
   home,
   notFound,
   writeNewDataToJSON,
   blackFridayAsync,
+  blackFridayCallback,
   blackFridayPromise,
 };

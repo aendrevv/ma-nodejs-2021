@@ -25,7 +25,12 @@ content-type: application/json
   {"type": "T-shirt", "color": "yellow", "quantity": 666, "price": "$0.99"}
 ]
 ###
+
 GET http://localhost:5000/blackFriday?field=async
 ###
+
+GET http://localhost:5000/blackFriday?field=callback
+###
+
 GET http://localhost:5000/blackFriday?field=promise
 ###

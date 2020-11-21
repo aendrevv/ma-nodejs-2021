@@ -20,11 +20,8 @@ const router = async (request, response) => {
     case `/blackFriday`:
       if (method === 'GET' && queryParams.field === 'async') await blackFridayAsync(response);
       if (method === 'GET' && queryParams.field === 'callback') blackFridayCallback(response);
-      if (method === 'GET' && queryParams.field === 'promise') blackFridayPromise(response);
+      if (method === 'GET' && queryParams.field === 'promise') await blackFridayPromise(response);
       break;
-    // case `/setDiscountAsync`:
-    //   method === 'PUT' ? setDiscountAsync(response, queryParams) : notFound(response);
-    //   break;
     default:
       notFound(response);
       break;

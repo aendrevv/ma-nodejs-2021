@@ -14,8 +14,6 @@ const errorMessage = `TOO BIG DISCOUNT!`;
 
 const randomNumberGenerator = () => Math.floor(Math.random() * 1e6) % 99;
 
-// const callback = (err, data) => (err ? console.error(errorMessage) : data);
-
 const discountHandlerCallback = callback => {
   const currentDiscount = randomNumberGenerator();
   setTimeout(() => {
@@ -23,23 +21,6 @@ const discountHandlerCallback = callback => {
     return callback(null, currentDiscount);
   }, delay);
 };
-
-// discountHandlerCallback();
-
-const discountHandlerPromise = () => {
-  const currentDiscount = randomNumberGenerator();
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (currentDiscount > maxDiscount) {
-        reject(new Error(errorMessage));
-      }
-
-      resolve(currentDiscount);
-    }, delay);
-  });
-};
-
-// discountHandlerPromise()
 
 const getDiscountCallback = () => {
   return discountHandlerCallback((error, result) => {
@@ -49,22 +30,27 @@ const getDiscountCallback = () => {
   });
 };
 
-// getDiscountCallback();
-
-const getDiscountPromise = () => {
-  let result;
-  discountHandlerPromise()
-    .then(resolve => {
-      result = resolve;
-    })
-    .catch(() => {
-      result = getDiscountPromise();
-    });
-
-  return result;
+const discountHandlerPromise = () => {
+  const currentDiscount = randomNumberGenerator();
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (currentDiscount > maxDiscount) {
+        reject(new Error(errorMessage));
+      }
+      resolve(currentDiscount);
+    }, delay);
+  });
 };
 
-// getDiscountPromise();
+const getDiscountPromise = async () => {
+  let res;
+  try {
+    res = await discountHandlerPromise();
+  } catch (error) {
+    res = await getDiscountPromise();
+  }
+  return res;
+};
 
 const getDiscountAsync = async () => {
   let res;
@@ -75,8 +61,6 @@ const getDiscountAsync = async () => {
   }
   return res;
 };
-
-// getDiscountAsync();
 
 const setDiscountAsync = async array => {
   const returnedArr = await myMap(array, async element => {
@@ -93,7 +77,7 @@ const setDiscountAsync = async array => {
           element.discount *= 1 - (await getDiscountAsync()) / 100;
         }
       }
-      element.newPrice = +(element.price.slice(1) * element.discount).toFixed(2);
+      element.newPrice = `$${(element.price.slice(1) * element.discount).toFixed(2)}`;
       element.discount = `${((1 - element.discount) * 100).toFixed(0)}%`;
     } catch (error) {
       console.log('OOPS!');
@@ -103,7 +87,6 @@ const setDiscountAsync = async array => {
   return Promise.all(returnedArr);
 };
 
-// TODO
 const setDiscountPromise = async array => {
   const returnedArr = await myMap(array, async element => {
     if (!element.quantity) element.quantity = 0;
@@ -111,40 +94,39 @@ const setDiscountPromise = async array => {
       element.price = element.priceForPair;
       delete element.priceForPair;
     }
-    element.discount = 1 - getDiscountPromise() / 100;
+    element.discount = 1 - (await getDiscountPromise()) / 100;
     if (element.type === 'hat') {
-      element.discount *= 1 - getDiscountPromise() / 100;
+      element.discount *= 1 - (await getDiscountPromise()) / 100;
       if (element.color === 'red') {
-        element.discount *= 1 - (await getDiscountAsync()) / 100;
+        element.discount *= 1 - (await getDiscountPromise()) / 100;
       }
     }
-    element.newPrice = +(element.price.slice(1) * element.discount).toFixed(2);
+    element.newPrice = `$${(element.price.slice(1) * element.discount).toFixed(2)}`;
     element.discount = `${((1 - element.discount) * 100).toFixed(0)}%`;
     return element;
   });
   return Promise.all(returnedArr);
 };
 
-// TODO
 const setDiscountCallback = async array => {
-  const returnedArr = await myMap(array, async element => {
+  const returnedArr = await myMap(array, element => {
     if (!element.quantity) element.quantity = 0;
     if (element.priceForPair) {
       element.price = element.priceForPair;
       delete element.priceForPair;
     }
     element.discount = 1 - getDiscountCallback() / 100;
-    // if (element.type === 'hat') {
-    //   element.discount *= 1 - (await getDiscountAsync()) / 100;
-    //   if (element.color === 'red') {
-    //     element.discount *= 1 - (await getDiscountAsync()) / 100;
-    //   }
-    // }
-    // element.newPrice = +(element.price.slice(1) * element.discount).toFixed(2);
-    // element.discount = `${((1 - element.discount) * 100).toFixed(0)}%`;
+    if (element.type === 'hat') {
+      element.discount *= 1 - getDiscountCallback() / 100;
+      if (element.color === 'red') {
+        element.discount *= 1 - getDiscountCallback() / 100;
+      }
+    }
+    element.newPrice = `$${(element.price.slice(1) * element.discount).toFixed(2)}`;
+    element.discount = `${((1 - element.discount) * 100).toFixed(0)}%`;
     return element;
   });
-  return Promise.all(returnedArr);
+  return returnedArr;
 };
 
 module.exports = { setDiscountAsync, setDiscountPromise, setDiscountCallback };
