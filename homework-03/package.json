@@ -2,7 +2,7 @@
   "name": "homework-03",
   "author": "Andrii Tolmachov",
   "license": "MIT",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Callbacks, Promises, Async/await, Event Loop",
   "scripts": {
     "start": "nodemon ./src/app.js"

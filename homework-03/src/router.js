@@ -19,7 +19,7 @@ const router = async (request, response) => {
       break;
     case `/blackFriday`:
       if (method === 'GET' && queryParams.field === 'async') await blackFridayAsync(response);
-      if (method === 'GET' && queryParams.field === 'callback') blackFridayCallback(response);
+      if (method === 'GET' && queryParams.field === 'callback') await blackFridayCallback(response);
       if (method === 'GET' && queryParams.field === 'promise') await blackFridayPromise(response);
       break;
     default:
