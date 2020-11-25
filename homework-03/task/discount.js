@@ -1,5 +1,5 @@
 require('dotenv').config();
-const util = require('util');
+// const util = require('util');
 
 const myMap = require('./myMap');
 const arrayModifier = require('./task3');
@@ -18,6 +18,14 @@ const discountHandlerCallback = callback => {
   }, delay);
 };
 
+const discountHandlerPro = callback => {
+  discountHandlerCallback((err, res) => {
+    if (err) return discountHandlerPro(callback);
+
+    return callback(null, res);
+  });
+};
+
 const getDiscountCallback = (discountNumber, discountValues, callback) => {
   discountHandlerCallback((error, result) => {
     if (error) return getDiscountCallback(discountNumber, discountValues, callback);
@@ -32,24 +40,25 @@ const getDiscountCallback = (discountNumber, discountValues, callback) => {
 
 const discountHandlerPromise = () => {
   return new Promise((res, rej) => {
-    discountHandlerCallback((error, result) => {
+    discountHandlerPro((error, result) => {
       if (error) rej(error);
       else res(result);
     });
   });
 };
 
-const getDiscountPromisified = util.promisify(discountHandlerCallback);
+const getDiscountPromise = discountNumber => {
+  const promiseArray = [];
 
-const getDiscountPromise = (discountNumber, discountValues, callback) => {
-  getDiscountPromisified()
-    .then(disc => {
-      discountValues.push(disc);
-      if (discountValues.length < discountNumber)
-        getDiscountPromise(discountNumber, discountValues, callback);
-      else callback(discountValues);
-    })
-    .catch(() => getDiscountPromise(discountNumber, discountValues, callback));
+  for (let i = 0; i < discountNumber; i += 1) {
+    promiseArray.push(discountHandlerPromise());
+  }
+
+  return Promise.all(promiseArray).then(d => {
+    const discount = d.reduce((acc, cur) => acc + cur / 100, 0);
+
+    return discount;
+  });
 };
 
 const getDiscountAsync = async () => {
@@ -64,7 +73,7 @@ const getDiscountAsync = async () => {
 
 const setDiscountAsync = async array => {
   const modifiedArray = arrayModifier(array);
-  const returningArray = await myMap(modifiedArray, async element => {
+  const returningArray = myMap(modifiedArray, async element => {
     try {
       element.discount = 1 - (await getDiscountAsync()) / 100;
       if (element.type === 'hat') {
@@ -105,24 +114,25 @@ const setDiscountCallback = array => {
 };
 
 const setDiscountPromise = array => {
-  const modifiedArray = arrayModifier(array);
-  const returningArray = myMap(modifiedArray, element => {
-    let discountNumber = 1;
-    if (element.type === 'hat') {
-      discountNumber = 2;
-      if (element.color === 'red') discountNumber = 3;
-    }
+  return new Promise(res => {
+    const modifiedArray = arrayModifier(array);
 
-    getDiscountPromise(discountNumber, [], discountValues => {
-      const discount = discountValues.reduce((acc, cur) => acc * (1 - cur / 100), 1);
-      element.newPrice = `$${(element.price.slice(1) * discount).toFixed(2)}`;
-      element.discount = `${((1 - discount) * 100).toFixed(0)}%`;
+    const returningArray = myMap(modifiedArray, element => {
+      let discountNumber = 1;
+      if (element.type === 'hat') {
+        discountNumber = 2;
+        if (element.color === 'red') discountNumber = 3;
+      }
+
+      getDiscountPromise(discountNumber).then(discount => {
+        element.newPrice = `$${(element.price.slice(1) * (1 - discount)).toFixed(2)}`;
+        element.discount = `${(discount * 100).toFixed(0)}%`;
+        return element;
+      });
     });
 
-    return element;
+    res(returningArray);
   });
-
-  return returningArray;
 };
 
 module.exports = { setDiscountAsync, setDiscountPromise, setDiscountCallback };

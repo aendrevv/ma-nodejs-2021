@@ -26,7 +26,7 @@ const serverError = response => {
   response.end(JSON.stringify({ message: `500 Internal Server Error` }));
 };
 
-const writeNewDataToJSON = async (data, response) => {
+const writeNewDataToJSON = (data, response) => {
   if (!Array.isArray(data) || !data.some(e => e.type && e.color && (e.price || e.priceForPair)))
     return badData(response);
 
@@ -53,15 +53,18 @@ const blackFridayAsync = async response => {
   }
 };
 
-const blackFridayPromise = async response => {
+const blackFridayPromise = response => {
   try {
-    store = await setDiscountPromise(products);
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.write(JSON.stringify(store));
-    return response.end();
+    setDiscountPromise(products).then(storage => {
+      response.writeHead(200, { 'Content-Type': 'application/json' });
+      response.write(JSON.stringify(storage));
+      response.end();
+    });
+
+    return;
   } catch (error) {
     console.error(error.message);
-    return serverError(response);
+    serverError(response);
   }
 };
 

@@ -2,7 +2,7 @@
 // Допускається першим елементом передавати масив.
 // Опціонально, створити myMap як метод класу Array який буде працювати аналогічно map.
 
-const myMap = async (array, callback) => {
+const myMap = (array, callback) => {
   const { length } = array;
   const returningArray = new Array(length);
 
