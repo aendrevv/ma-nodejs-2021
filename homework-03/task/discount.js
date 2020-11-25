@@ -92,7 +92,7 @@ const setDiscountAsync = async array => {
   return Promise.all(returningArray);
 };
 
-const setDiscountCallback = array => {
+const setDiscountCallback = (array, res, callback) => {
   const modifiedArray = arrayModifier(array);
   const returningArray = myMap(modifiedArray, element => {
     let discountNumber = 1;
@@ -110,7 +110,7 @@ const setDiscountCallback = array => {
     return element;
   });
 
-  return returningArray;
+  return callback(res, returningArray);
 };
 
 const setDiscountPromise = array => {

@@ -68,16 +68,18 @@ const blackFridayPromise = response => {
   }
 };
 
-const blackFridayCallback = async response => {
+const blackFridayCallback = response => {
   try {
-    store = await setDiscountCallback(products);
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.write(JSON.stringify(store));
-    return response.end();
+    return setDiscountCallback(products, response, (res, storage) => {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.write(JSON.stringify(storage));
+      return res.end();
+    });
   } catch (error) {
     console.error(error.message);
     return serverError(response);
   }
+  // setDiscountCallback(products, )
 };
 
 module.exports = {
