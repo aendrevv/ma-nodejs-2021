@@ -93,8 +93,10 @@ const setDiscountAsync = async array => {
 };
 
 const setDiscountCallback = (array, res, callback) => {
+  const returningArray = [];
   const modifiedArray = arrayModifier(array);
-  const returningArray = myMap(modifiedArray, element => {
+
+  myMap(modifiedArray, element => {
     let discountNumber = 1;
     if (element.type === 'hat') {
       discountNumber = 2;
@@ -105,19 +107,21 @@ const setDiscountCallback = (array, res, callback) => {
       const discount = discountValues.reduce((acc, cur) => acc * (1 - cur / 100), 1);
       element.newPrice = `$${(element.price.slice(1) * discount).toFixed(2)}`;
       element.discount = `${((1 - discount) * 100).toFixed(0)}%`;
+      returningArray.push(element);
+
+      if (returningArray.length === modifiedArray.length) {
+        callback(res, returningArray);
+      }
     });
-
-    return element;
   });
-
-  return callback(res, returningArray);
 };
 
 const setDiscountPromise = array => {
-  return new Promise(res => {
+  return new Promise((resolve, reject) => {
+    const returningArray = [];
     const modifiedArray = arrayModifier(array);
 
-    const returningArray = myMap(modifiedArray, element => {
+    myMap(modifiedArray, element => {
       let discountNumber = 1;
       if (element.type === 'hat') {
         discountNumber = 2;
@@ -127,11 +131,15 @@ const setDiscountPromise = array => {
       getDiscountPromise(discountNumber).then(discount => {
         element.newPrice = `$${(element.price.slice(1) * (1 - discount)).toFixed(2)}`;
         element.discount = `${(discount * 100).toFixed(0)}%`;
-        return element;
+        returningArray.push(element);
+
+        if (returningArray.length === modifiedArray.length) {
+          resolve(returningArray);
+        } else if (returningArray.length > modifiedArray.length) {
+          reject(new Error('Too many elements'));
+        }
       });
     });
-
-    res(returningArray);
   });
 };
 
