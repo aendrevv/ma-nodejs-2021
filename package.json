@@ -1,18 +1,19 @@
 {
-  "name": "homework-03",
+  "name": "homework-04",
   "author": "Andrii Tolmachov",
   "license": "MIT",
-  "version": "1.0.4",
-  "description": "Callbacks, Promises, Async/await, Event Loop",
+  "version": "1.0.2",
+  "description": "Streams, Event Emitter, File System",
   "scripts": {
-    "start": "nodemon ./src/app.js"
+    "start": "nodemon src/app.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/aendrevv/ma-nodejs-2021.git"
   },
   "dependencies": {
-    "dotenv": "^8.2.0"
+    "dotenv": "^8.2.0",
+    "nanoid": "^3.1.19"
   },
   "devDependencies": {
     "eslint": "^7.12.0",

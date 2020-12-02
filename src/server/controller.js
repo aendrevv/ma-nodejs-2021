@@ -1,10 +1,22 @@
 const fs = require('fs');
 const path = require('path');
+const { createGunzip } = require('zlib');
+const { pipeline } = require('stream');
+const { promisify } = require('util');
+const { nanoid } = require('nanoid');
+const products = require('../../products.json');
+const {
+  setDiscountAsync,
+  setDiscountPromise,
+  setDiscountCallback,
+  createCsvToJson,
+} = require('../services');
 
-const products = require('../products.json');
-const { setDiscountAsync, setDiscountPromise, setDiscountCallback } = require('../task/discount');
+// const { '../../upload' } = process.env;
 
 let store = [];
+
+const promisifiedPipeline = promisify(pipeline);
 
 const home = response => {
   response.end(`Home 🏠`);
@@ -82,6 +94,52 @@ const blackFridayCallback = response => {
   // setDiscountCallback(products, )
 };
 
+const uploadCsv = async inputStream => {
+  const gunzip = createGunzip();
+  const id = nanoid();
+  console.log(id);
+
+  try {
+    await fs.promises.mkdir('upload/', { recursive: true });
+    console.log('Creating folder');
+  } catch (error) {
+    console.error(`Failed to create folder!`, error.message);
+    return error;
+  }
+
+  const filepath = `upload/${id}.json`;
+  const outputStream = fs.createWriteStream(filepath);
+
+  const csvToJson = createCsvToJson();
+
+  try {
+    return await promisifiedPipeline(inputStream, gunzip, csvToJson, outputStream);
+  } catch (error) {
+    console.error('CSV pipeline has failed!', error);
+    return error;
+  }
+};
+
+const getListOfFiles = async response => {
+  try {
+    const files = await fs.promises.readdir('upload/', { withFileTypes: true });
+
+    response.writeHead(200, { 'Content-Type': 'application/json' });
+    response.write(JSON.stringify(files));
+    response.end();
+  } catch (error) {
+    console.error(error.message);
+    serverError(response);
+  }
+};
+
+const optimizeJson = (url, response) => {
+  response.write(JSON.stringify({ status: '202 Accepted' }));
+  response.end();
+  // TODO
+  // jsonOptimizer(path.basename(url));
+};
+
 module.exports = {
   home,
   notFound,
@@ -89,4 +147,7 @@ module.exports = {
   blackFridayAsync,
   blackFridayCallback,
   blackFridayPromise,
+  uploadCsv,
+  getListOfFiles,
+  optimizeJson,
 };

@@ -1,5 +1,4 @@
 require('dotenv').config();
-// const util = require('util');
 
 const myMap = require('./myMap');
 const arrayModifier = require('./task3');
