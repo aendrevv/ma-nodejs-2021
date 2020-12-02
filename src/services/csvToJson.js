@@ -29,7 +29,6 @@ const createCsvToJson = () => {
   };
 
   const flush = callback => {
-    console.log(`No more data to read`);
     callback(null, `\n]`);
   };
 

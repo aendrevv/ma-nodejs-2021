@@ -8,8 +8,7 @@ const start = () => {
   const host = +process.env.HOST || 'localhost';
 
   server.listen(port, () => {
-    console.log(`🤖 Server is listening ${host} on port ${port}!`);
-    // throw new Error(':(');
+    console.log(`\n🤖 Server is listening ${host} on port ${port}!`);
   });
 };
 
@@ -21,7 +20,7 @@ const stop = callback => {
       return;
     }
 
-    console.log('Server has been stopped.');
+    console.log('\n🤖 Server has been stopped.');
     callback();
   });
 };

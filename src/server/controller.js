@@ -10,6 +10,7 @@ const {
   setDiscountPromise,
   setDiscountCallback,
   createCsvToJson,
+  jsonOptimizer,
 } = require('../services');
 
 // const { '../../upload' } = process.env;
@@ -24,11 +25,10 @@ const home = response => {
 
 const notFound = response => {
   response.statusCode = 404;
-  response.end('Not Found :(');
+  response.end(JSON.stringify({ message: `404 Not Found :(` }));
 };
 
 const badData = response => {
-  console.log(`BAD`);
   response.statusCode = 406;
   response.end(JSON.stringify({ message: `406 Not Acceptable` }));
 };
@@ -97,7 +97,6 @@ const blackFridayCallback = response => {
 const uploadCsv = async inputStream => {
   const gunzip = createGunzip();
   const id = nanoid();
-  console.log(id);
 
   try {
     await fs.promises.mkdir('upload/', { recursive: true });
@@ -111,6 +110,7 @@ const uploadCsv = async inputStream => {
   const outputStream = fs.createWriteStream(filepath);
 
   const csvToJson = createCsvToJson();
+  // console.log(`File ${id}.json has been created!\n`);
 
   try {
     return await promisifiedPipeline(inputStream, gunzip, csvToJson, outputStream);
@@ -133,11 +133,18 @@ const getListOfFiles = async response => {
   }
 };
 
-const optimizeJson = (url, response) => {
-  response.write(JSON.stringify({ status: '202 Accepted' }));
-  response.end();
-  // TODO
-  // jsonOptimizer(path.basename(url));
+const optimizeJson = async (url, response) => {
+  const filename = path.basename(url);
+  try {
+    await fs.promises.access(`upload/${filename}`);
+    jsonOptimizer(filename);
+    response.statusCode = 202;
+    response.write(JSON.stringify({ status: '202 Accepted' }));
+    response.end();
+  } catch (error) {
+    console.error(error.message);
+    notFound(response);
+  }
 };
 
 module.exports = {

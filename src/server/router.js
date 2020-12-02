@@ -14,7 +14,7 @@ const {
 const router = async (request, response) => {
   const { url, method, queryParams, body: data } = request;
 
-  if (method === 'PUT' && url.startsWith('/optimize')) return optimizeJson(url, response);
+  if (method === 'PUT' && url.path.startsWith('/optimize')) return optimizeJson(url.path, response);
 
   switch (url.pathname) {
     case '/':
@@ -42,7 +42,6 @@ const streamRoutesHandler = async (request, response) => {
 
   if (method === 'PUT' && url === '/uploadcsv') {
     try {
-      console.log('\n\nREQUEST\n\n');
       await uploadCsv(request);
     } catch (error) {
       console.error('Failed to upload CSV-file', error);
@@ -54,7 +53,6 @@ const streamRoutesHandler = async (request, response) => {
     response.write(JSON.stringify({ message: 'OK' }));
     response.end();
   }
-  console.log('123');
   notFound(response);
 };
 
