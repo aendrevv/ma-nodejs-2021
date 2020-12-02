@@ -1,8 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-const products = require('../products.json');
-const { setDiscountAsync, setDiscountPromise, setDiscountCallback } = require('../task/discount');
+const products = require('../../products.json');
+const {
+  setDiscountAsync,
+  setDiscountPromise,
+  setDiscountCallback,
+} = require('../../task/discount');
 
 let store = [];
 
