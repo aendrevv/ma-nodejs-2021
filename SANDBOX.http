@@ -25,4 +25,4 @@ Content-Type: application/gzip
 < products.csv.gz
 ###
 
-PUT http://localhost:5000/optimize/NCNbLcdayRciC6SxfexuH.json
+PUT http://localhost:5000/optimize/HJ6Y9pM--vYb6BACPEXxL.json

@@ -5,8 +5,8 @@ const enableGracefulExit = () => {
   const exitHandler = error => {
     if (error) console.error(error);
 
-    // console.log('Stopping... (as gracefully as possible))');
     server.stop(() => {
+      console.log('\nSTOP');
       process.exit();
     });
   };

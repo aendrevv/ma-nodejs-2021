@@ -16,8 +16,7 @@ const stop = callback => {
   server.close(err => {
     if (err) {
       console.error(err, 'Failed to close server.');
-      callback();
-      return;
+      callback(err);
     }
 
     console.log('\n🤖 Server has been stopped.');

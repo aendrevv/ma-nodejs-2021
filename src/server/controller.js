@@ -13,7 +13,7 @@ const {
   jsonOptimizer,
 } = require('../services');
 
-// const { '../../upload' } = process.env;
+const { UPLOAD } = process.env;
 
 let store = [];
 
@@ -99,31 +99,30 @@ const uploadCsv = async inputStream => {
   const id = nanoid();
 
   try {
-    await fs.promises.mkdir('upload/', { recursive: true });
+    await fs.promises.mkdir(UPLOAD, { recursive: true });
     console.log('Creating folder');
   } catch (error) {
     console.error(`Failed to create folder!`, error.message);
     return error;
   }
 
-  const filepath = `upload/${id}.json`;
-  const outputStream = fs.createWriteStream(filepath);
-
   const csvToJson = createCsvToJson();
-  // console.log(`File ${id}.json has been created!\n`);
+  const filepath = `${UPLOAD}${id}.json`;
+  console.log('filepath :>> ', filepath);
+  const outputStream = fs.createWriteStream(filepath);
 
   try {
     return await promisifiedPipeline(inputStream, gunzip, csvToJson, outputStream);
   } catch (error) {
-    console.error('CSV pipeline has failed!', error);
+    console.error('CSV pipeline has failed!\n', error || error.message);
     return error;
   }
 };
 
 const getListOfFiles = async response => {
   try {
-    const files = await fs.promises.readdir('upload/', { withFileTypes: true });
-
+    const files = await fs.promises.readdir(UPLOAD, { withFileTypes: true });
+    console.log('files :>> ', files);
     response.writeHead(200, { 'Content-Type': 'application/json' });
     response.write(JSON.stringify(files));
     response.end();
@@ -136,7 +135,7 @@ const getListOfFiles = async response => {
 const optimizeJson = async (url, response) => {
   const filename = path.basename(url);
   try {
-    await fs.promises.access(`upload/${filename}`);
+    await fs.promises.access(`${UPLOAD}${filename}`);
     jsonOptimizer(filename);
     response.statusCode = 202;
     response.write(JSON.stringify({ status: '202 Accepted' }));

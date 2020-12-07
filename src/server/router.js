@@ -51,6 +51,7 @@ const streamRoutesHandler = async (request, response) => {
     }
     response.statusCode = 200;
     response.write(JSON.stringify({ message: 'OK' }));
+    console.log('CSV has been successfully converted to JSON');
     response.end();
   }
   notFound(response);
