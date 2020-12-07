@@ -1,8 +1,6 @@
-require('dotenv').config();
-const http = require('http');
-const requestsHandler = require('./requestHandler');
+const { port } = require('./config');
+const app = require('./server');
 
-const port = +process.env.PORT || 5000;
-
-const server = http.createServer(requestsHandler);
-server.listen(port, () => console.log(`🤖 Server is listening on port ${port}!`));
+app.listen(port, () => {
+  console.log(`App is listening at http://localhost:${port}`);
+});

@@ -7,18 +7,14 @@ const task = require('./routes/task');
 const app = express();
 
 app.use(bodyParser.json());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  }),
-);
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(myLogger);
 
-app.use((req, res, next) => {
-  console.log(req.headers.token);
-  next();
-});
+// app.use((req, res, next) => {
+//   console.log(req.headers.token);
+//   next();
+// });
 
 app.use('/task', task);
 

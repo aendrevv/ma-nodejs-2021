@@ -1,5 +1,5 @@
 const myLogger = (req, res, next) => {
-  console.log('LOGGED');
+  console.log('Time:', Date.now());
   next();
 };
 
