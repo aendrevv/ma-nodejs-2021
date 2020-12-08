@@ -107,7 +107,7 @@ const uploadCsv = async inputStream => {
   }
 
   const csvToJson = createCsvToJson();
-  const filepath = `${UPLOAD}${id}.json`;
+  const filepath = path.resolve(UPLOAD, `${id}.json`);
   console.log('filepath :>> ', filepath);
   const outputStream = fs.createWriteStream(filepath);
 
@@ -121,7 +121,7 @@ const uploadCsv = async inputStream => {
 
 const getListOfFiles = async response => {
   try {
-    const files = await fs.promises.readdir(UPLOAD, { withFileTypes: true });
+    const files = await fs.promises.readdir(path.resolve(UPLOAD), { withFileTypes: true });
     console.log('files :>> ', files);
     response.writeHead(200, { 'Content-Type': 'application/json' });
     response.write(JSON.stringify(files));
@@ -135,7 +135,7 @@ const getListOfFiles = async response => {
 const optimizeJson = async (url, response) => {
   const filename = path.basename(url);
   try {
-    await fs.promises.access(`${UPLOAD}${filename}`);
+    await fs.promises.access(path.resolve(UPLOAD, filename));
     jsonOptimizer(filename);
     response.statusCode = 202;
     response.write(JSON.stringify({ status: '202 Accepted' }));
