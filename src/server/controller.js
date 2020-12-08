@@ -86,7 +86,7 @@ const uploadCsv = async inputStream => {
   const id = nanoid();
 
   try {
-    await fs.promises.mkdir(UPLOAD, { recursive: true });
+    await fs.promises.mkdir(path.resolve(UPLOAD), { recursive: true });
     console.log('Creating folder');
   } catch (error) {
     console.error(`Failed to create folder!`, error.message);
@@ -118,7 +118,7 @@ const convertCsvToJson = async (req, res) => {
 
 const getListOfFiles = async (req, res) => {
   try {
-    const fls = await fs.promises.readdir(UPLOAD, { withFileTypes: true });
+    const fls = await fs.promises.readdir(path.resolve(UPLOAD), { withFileTypes: true });
     console.log('files :>> ', fls);
     res.status(200).json({ files: fls });
   } catch (err) {
@@ -130,7 +130,7 @@ const getListOfFiles = async (req, res) => {
 const optimizeJson = async (req, res) => {
   const filename = path.basename(req.url);
   try {
-    await fs.promises.access(`${UPLOAD}${filename}`);
+    await fs.promises.access(path.resolve(UPLOAD, filename));
     console.log('\nWaiting...\n');
     jsonOptimizer(filename);
     res.status(202).json({ message: '202 Accepted' });
