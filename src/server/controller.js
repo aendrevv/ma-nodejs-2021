@@ -1,9 +1,10 @@
+/* eslint-disable consistent-return */
 const fs = require('fs');
 const path = require('path');
 const { createGunzip } = require('zlib');
 const { pipeline } = require('stream');
-const { promisify } = require('util');
 const { nanoid } = require('nanoid');
+const { promisify } = require('util');
 const products = require('../../products.json');
 const {
   setDiscountAsync,
@@ -13,85 +14,71 @@ const {
   jsonOptimizer,
 } = require('../services');
 
-const { UPLOAD } = process.env;
+const {
+  folders: { UPLOAD },
+} = require('../config');
 
 let store = [];
 
 const promisifiedPipeline = promisify(pipeline);
 
-const home = response => {
-  response.end(`Home 🏠`);
+const home = (req, res) => {
+  res.status(200).json({ message: 'Home 🏠' });
 };
 
-const notFound = response => {
-  response.statusCode = 404;
-  response.end(JSON.stringify({ message: `404 Not Found :(` }));
+const notFound = (req, res) => {
+  res.status(404).json({ message: '404 Not Found' });
 };
 
-const badData = response => {
-  response.statusCode = 406;
-  response.end(JSON.stringify({ message: `406 Not Acceptable` }));
+const badData = (req, res) => {
+  res.status(406).json({ message: '406 Bad data' });
 };
 
-const serverError = response => {
-  response.statusCode = 500;
-  response.end(JSON.stringify({ message: `500 Internal Server Error` }));
-};
-
-const writeNewDataToJSON = (data, response) => {
+const writeNewDataToJSON = (req, res) => {
+  const data = req.body;
   if (!Array.isArray(data) || !data.some(e => e.type && e.color && (e.price || e.priceForPair)))
-    return badData(response);
+    return badData(res);
 
   try {
-    response.writeHead(200, { 'Content-Type': 'application/json' });
     fs.writeFileSync(path.resolve('./', `products.json`), JSON.stringify(data));
-    response.write(JSON.stringify({ message: `Done. Check products.json`, data }));
-    return response.end();
-  } catch (error) {
-    console.error(error.message);
-    return serverError(response);
+    res.status(200).json({ message: `Done. Check products.json`, data });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: '500 Internal Server Error' });
   }
 };
 
-const blackFridayAsync = async response => {
+const blackFridayAsync = async (req, res) => {
   try {
     store = await setDiscountAsync(products);
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.write(JSON.stringify(store));
-    return response.end();
-  } catch (error) {
-    console.error(error.message);
-    return serverError(response);
+    res.status(200).json({ message: `Done. Check products.json`, store });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: '500 Internal Server Error' });
   }
 };
 
-const blackFridayPromise = response => {
+const blackFridayPromise = (req, res) => {
   try {
     setDiscountPromise(products).then(storage => {
-      response.writeHead(200, { 'Content-Type': 'application/json' });
-      response.write(JSON.stringify(storage));
-      response.end();
+      res.status(200).json({ message: `Done`, storage });
     });
-
     return;
-  } catch (error) {
-    console.error(error.message);
-    serverError(response);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: '500 Internal Server Error' });
   }
 };
 
-const blackFridayCallback = response => {
+const blackFridayCallback = (req, resp) => {
   try {
-    return setDiscountCallback(products, response, (res, storage) => {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.write(JSON.stringify(storage));
-      return res.end();
+    return setDiscountCallback(products, resp, (res, storage) => {
+      res.status(200).json({ message: `Done`, storage });
     });
-  } catch (error) {
-    console.error(error.message);
-    return serverError(response);
+  } catch (err) {
+    console.error(err);
+    resp.status(500).json({ message: '500 Internal Server Error' });
   }
-  // setDiscountCallback(products, )
 };
 
 const uploadCsv = async inputStream => {
@@ -99,7 +86,7 @@ const uploadCsv = async inputStream => {
   const id = nanoid();
 
   try {
-    await fs.promises.mkdir(UPLOAD, { recursive: true });
+    await fs.promises.mkdir(path.resolve(UPLOAD), { recursive: true });
     console.log('Creating folder');
   } catch (error) {
     console.error(`Failed to create folder!`, error.message);
@@ -107,7 +94,7 @@ const uploadCsv = async inputStream => {
   }
 
   const csvToJson = createCsvToJson();
-  const filepath = path.resolve(UPLOAD, `${id}.json`);
+  const filepath = `${UPLOAD}${id}.json`;
   console.log('filepath :>> ', filepath);
   const outputStream = fs.createWriteStream(filepath);
 
@@ -119,30 +106,37 @@ const uploadCsv = async inputStream => {
   }
 };
 
-const getListOfFiles = async response => {
+const convertCsvToJson = async (req, res) => {
   try {
-    const files = await fs.promises.readdir(path.resolve(UPLOAD), { withFileTypes: true });
-    console.log('files :>> ', files);
-    response.writeHead(200, { 'Content-Type': 'application/json' });
-    response.write(JSON.stringify(files));
-    response.end();
-  } catch (error) {
-    console.error(error.message);
-    serverError(response);
+    await uploadCsv(req);
+    res.status(200).json({ message: '200 OK' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: '500 Internal Server Error' });
   }
 };
 
-const optimizeJson = async (url, response) => {
-  const filename = path.basename(url);
+const getListOfFiles = async (req, res) => {
+  try {
+    const fls = await fs.promises.readdir(path.resolve(UPLOAD), { withFileTypes: true });
+    console.log('files :>> ', fls);
+    res.status(200).json({ files: fls });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: '500 Internal Server Error' });
+  }
+};
+
+const optimizeJson = async (req, res) => {
+  const filename = path.basename(req.url);
   try {
     await fs.promises.access(path.resolve(UPLOAD, filename));
+    console.log('\nWaiting...\n');
     jsonOptimizer(filename);
-    response.statusCode = 202;
-    response.write(JSON.stringify({ status: '202 Accepted' }));
-    response.end();
-  } catch (error) {
-    console.error(error.message);
-    notFound(response);
+    res.status(202).json({ message: '202 Accepted' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: '500 Internal Server Error' });
   }
 };
 
@@ -154,6 +148,7 @@ module.exports = {
   blackFridayCallback,
   blackFridayPromise,
   uploadCsv,
+  convertCsvToJson,
   getListOfFiles,
   optimizeJson,
 };
