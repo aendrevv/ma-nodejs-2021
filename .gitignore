@@ -1,5 +1,7 @@
 node_modules
 .env
-hometask.js
-*.gz
 upload/
+*.csv.gz
+quantityPerType.json
+quantityPerProduct.json
+test/
