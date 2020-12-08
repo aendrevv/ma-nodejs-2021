@@ -1,25 +1,28 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const basicAuth = require('express-basic-auth');
+
 const { myLogger, errorHandler } = require('../middlewares');
 
-const task = require('./routes/task');
+const router = require('./router');
+const { user } = require('../config');
 
 const app = express();
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const basicAuthOptions = {
+  users: { [user.NAME]: user.PASSWORD },
+  unauthorizedResponse: { message: 'Unauthorized' },
+};
 app.use(myLogger);
 
-// app.use((req, res, next) => {
-//   console.log(req.headers.token);
-//   next();
-// });
+app.use(basicAuth(basicAuthOptions), router);
 
-app.use('/task', task);
-
-app.get('/', (req, res) => {
-  res.send('Hello World!');
+app.use((req, res, next) => {
+  res.status(404).json({ message: '404 Not found' });
+  next();
 });
 
 app.use(errorHandler);

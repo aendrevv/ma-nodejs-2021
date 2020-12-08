@@ -1,13 +1,20 @@
-const myLogger = (req, res, next) => {
-  console.log('Time:', Date.now());
-  next();
-};
+module.exports = {
+  myLogger: (req, res, next) => {
+    console.log('Time:', Date.now());
+    next();
+  },
+  errorHandler: (err, req, res, next) => {
+    console.error({ err }, 'Global catch errors');
 
-const errorHandler = (err, req, res, next) => {
-  if (res.headersSent) {
-    return next(err);
-  }
-  return res.status(500).render('error', { error: err });
-};
+    let errMessage = { message: 'Internal server errors!' };
+    if (!(parseInt(err.status, 10) === 500) && err.message) {
+      res.status(err.status);
+      errMessage = { message: err.message };
+    } else {
+      res.status(500);
+    }
 
-module.exports = { myLogger, errorHandler };
+    res.json(errMessage);
+    next();
+  },
+};

@@ -1,7 +1,10 @@
 # root
 GET http://localhost:5000/
+Authorization:Basic TWFzdGVyczpBY2FkZW15
 ###
-PUT http://localhost:5000/writeNewDataToJSON HTTP/1.1
+PUT http://localhost:5000/newJson HTTP/1.1
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+
 content-type: application/json
 
 [
@@ -26,38 +29,38 @@ content-type: application/json
 ]
 ###
 
-GET http://localhost:5000/blackFriday?field=async
-###
-
-GET http://localhost:5000/blackFriday?field=callback
-###
-
-GET http://localhost:5000/blackFriday?field=promise
-###
-
-GET http://localhost:5000/task/log
+GET http://localhost:5000/blackfriday/async
+Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ###
-POST http://localhost:5000/task/items HTTP/1.1
-content-type: application/json
 
-[
-  {"type": "socks", "color": "red", "quantity": 10, "priceForPair": "$3"},
-  {"type": "socks", "color": "green", "quantity": 5, "priceForPair": "$10"},
-  {"type": "socks", "color": "blue", "quantity": 8, "priceForPair": "$6"},
-  {"type": "hat", "color": "red", "quantity": 7, "price": "$5"},
-  {"type": "hat", "color": "green", "quantity": 0, "price": "$6"},
-  {"type": "socks", "color": "blue", "priceForPair": "$6"},
-  {"type": "socks", "color": "red", "quantity": 10, "priceForPair": "$3"},
-  {"type": "socks", "color": "white", "quantity": 3, "priceForPair": "$4"},
-  {"type": "socks", "color": "green", "priceForPair": "$10"},
-  {"type": "socks", "color": "blue", "quantity": 2, "priceForPair": "$6"},
-  {"type": "hat", "color": "green", "quantity": 3, "price": "$5"},
-  {"type": "hat", "color": "red", "quantity": 1, "price": "$6"},
-  {"type": "socks", "color": "blue", "priceForPair": "$6"},
-  {"type": "boots", "color": "white", "quantity": 14, "priceForPair": "$29.99"},
-  {"type": "cap", "color": "purple", "quantity": 14, "price": "$11.99"},
-  {"type": "cap", "color": "black", "quantity": 88, "price": "$19.99"},
-  {"type": "shirt", "color": "red", "quantity": 161, "price": "$9.99"},
-  {"type": "T-shirt", "color": "yellow", "quantity": 666, "price": "$0.99"}
-]
+GET http://localhost:5000/blackfriday/clbck
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+###
+
+GET http://localhost:5000/blackfriday/prmss
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+###
+
+###
+PUT http://localhost:5000/uploadcsv HTTP/1.1
+Authorization: Basic TWFzdGVyczpBY2FkZW15
+
+< med_sample.csv.gz
+
+###
+PUT http://localhost:5000/uploadcsv HTTP/1.1
+Content-Type: application/gzip
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+
+< products.csv.gz
+
+###
+POST http://localhost:5000/optimize/rYoLo8mcLbp6q2_290uow.json
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+
+###
+GET http://localhost:5000/upload/listOfFiles
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+
+###
