@@ -1,7 +1,7 @@
 const { server, db: dbConfig } = require('./config');
 const app = require('./server');
 
-const db = require('./db')(dbConfig);
+const db = require('./db/pg')(dbConfig);
 
 const boot = async () => {
   try {

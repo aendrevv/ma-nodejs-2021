@@ -112,7 +112,6 @@ module.exports = config => {
       },
     };
   } catch (error) {
-    console.log('object :>> ');
     console.error(error.message || error);
     throw error;
   }
