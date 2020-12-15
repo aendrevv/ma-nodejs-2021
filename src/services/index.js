@@ -4,7 +4,7 @@ const task3 = require('./task3');
 const myMap = require('./myMap');
 const { setDiscountAsync, setDiscountPromise, setDiscountCallback } = require('./discount');
 const { createCsvToJson } = require('./csvToJson');
-const { jsonOptimizer } = require('./jsonOptimizer');
+const { jsonOptimizer, jsontodb, createNewInDB } = require('./jsonHandlers');
 const fatal = require('./fatal');
 
 module.exports = {
@@ -17,5 +17,7 @@ module.exports = {
   setDiscountCallback,
   createCsvToJson,
   jsonOptimizer,
+  jsontodb,
   fatal,
+  createNewInDB,
 };

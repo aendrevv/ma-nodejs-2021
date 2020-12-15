@@ -8,6 +8,8 @@ const {
   convertCsvToJson,
   getListOfFiles,
   optimizeJson,
+  fromJSONtoDB,
+  createOneInDB,
 } = require('./controller');
 
 router.get('/', home);
@@ -18,5 +20,8 @@ router.get('/blackfriday/async', blackFridayAsync);
 router.get('/blackfriday/clbck', blackFridayCallback);
 router.get('/blackfriday/prmss', blackFridayPromise);
 router.put('/newjson', writeNewDataToJSON);
+
+router.post('/push_db/:filename', fromJSONtoDB);
+router.post('/create', createOneInDB);
 
 module.exports = router;

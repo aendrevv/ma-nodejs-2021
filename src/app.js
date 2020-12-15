@@ -1,14 +1,24 @@
 const { server, db: dbConfig } = require('./config');
-const app = require('./server');
 
 const db = require('./db/pg')(dbConfig);
+
+const app = require('./server');
 
 const boot = async () => {
   try {
     await db.testConnection();
 
-    // const p = await db.createProduct({ type: 'socks', color: 'red', price: 14.88 });
-    // console.log(`p: ${JSON.stringify(p)}`);
+    // const d = Date.now();
+    // console.log('d :>> ', d);
+
+    await db.createProduct({
+      type: 'sword',
+      color: 'silver',
+      quantity: Date.now() % 29,
+      price: (Date.now() % 100) + 0.99,
+    });
+
+    // await db.deleteProduct(p.id - 10);
 
     app.listen(server.PORT, () => {
       console.log(`👾 App is listening at http://${server.HOST}:${server.PORT}`);
@@ -20,3 +30,20 @@ const boot = async () => {
 };
 
 boot();
+
+const exitHandler = async err => {
+  if (err) console.error('\n>>> Error:\n', err.message || '');
+
+  console.log('INFO: Processing shutdown... ');
+  await db.close();
+  process.exit();
+};
+
+process.on('SIGINT', exitHandler);
+process.on('SIGTERM', exitHandler);
+
+process.on('SIGUSR1', exitHandler);
+process.on('SIGUSR2', exitHandler);
+
+process.on('uncaughtException', exitHandler);
+process.on('unhandledRejection', exitHandler);

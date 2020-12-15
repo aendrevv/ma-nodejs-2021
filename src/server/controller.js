@@ -12,6 +12,8 @@ const {
   setDiscountCallback,
   createCsvToJson,
   jsonOptimizer,
+  jsontodb,
+  createNewInDB,
 } = require('../services');
 
 const {
@@ -83,7 +85,7 @@ const blackFridayCallback = (req, resp) => {
 
 const uploadCsv = async inputStream => {
   const gunzip = createGunzip();
-  const id = nanoid();
+  const id = nanoid(6);
 
   try {
     await fs.promises.mkdir(path.resolve(UPLOAD), { recursive: true });
@@ -140,6 +142,30 @@ const optimizeJson = async (req, res) => {
   }
 };
 
+const fromJSONtoDB = async (req, res) => {
+  const filename = path.basename(req.url);
+  try {
+    await fs.promises.access(path.resolve(UPLOAD, filename));
+    console.log('\nWaiting-jsontodb-\n');
+    jsontodb(filename);
+    res.status(205).json({ message: '204 No Content' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: '500 Internal Server Error' });
+  }
+};
+
+const createOneInDB = async (req, res) => {
+  const { type, color, price, quantity } = req.query;
+  try {
+    await createNewInDB(type, color, price, quantity);
+    res.status(200).json({ message: '200 OK' });
+  } catch (err) {
+    console.error('CREATE >>>\n', err);
+    res.status(500).json({ message: '500 Internal Server Error: CREATE >>>' });
+  }
+};
+
 module.exports = {
   home,
   notFound,
@@ -151,4 +177,6 @@ module.exports = {
   convertCsvToJson,
   getListOfFiles,
   optimizeJson,
+  fromJSONtoDB,
+  createOneInDB,
 };
