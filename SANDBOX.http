@@ -1,8 +1,8 @@
 # root
-GET http://localhost:5000/
+GET http://localhost:5002/
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 ###
-PUT http://localhost:5000/newJson HTTP/1.1
+PUT http://localhost:5002/newJson HTTP/1.1
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 content-type: application/json
@@ -14,43 +14,67 @@ content-type: application/json
 ]
 ###
 
-GET http://localhost:5000/blackfriday/async
+GET http://localhost:5002/blackfriday/async
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ###
 
-GET http://localhost:5000/blackfriday/clbck
+GET http://localhost:5002/blackfriday/clbck
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 ###
 
-GET http://localhost:5000/blackfriday/prmss
+GET http://localhost:5002/blackfriday/prmss
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 ###
 
 ### SMALL FILE
-PUT http://localhost:5000/uploadcsv HTTP/1.1
+PUT http://localhost:5002/uploadcsv HTTP/1.1
 Authorization: Basic TWFzdGVyczpBY2FkZW15
 
 < med_sample.csv.gz
 
 ### LARGE FILE
-PUT http://localhost:5000/uploadcsv HTTP/1.1
+PUT http://localhost:5002/uploadcsv HTTP/1.1
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 < products.csv.gz
 
 ### OPTIMIZE
-POST http://localhost:5000/optimize/products.json
+POST http://localhost:5002/optimize/products.json
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ### LIST
-GET http://localhost:5000/upload/listOfFiles
+GET http://localhost:5002/upload/listOfFiles
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ### PUSH DB
-POST http://localhost:5000/push_db/opt-products.json
+POST http://localhost:5002/db/push/opt-products.json
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ### CREATE NEW ELEMENT IN DB
-POST http://localhost:5000/create?type=boots&color=white&price=123
+POST http://localhost:5002/db/create?type=boots&color=white&price=123
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+
+###
+GET http://localhost:5002/db/getAll
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+
+###
+GET http://localhost:5002/db/get/63
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+
+###
+PUT http://localhost:5002/db/update/63 HTTP/1.1
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+content-type: application/json
+
+[
+  {"type": "axe", "color": "amber", "quantity": 2, "price": "335.89"}
+]
+###
+DELETE http://localhost:5002/db/delete/62
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+
+###
+DELETE http://localhost:5002/db/remove/61
 Authorization:Basic TWFzdGVyczpBY2FkZW15

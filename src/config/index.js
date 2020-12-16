@@ -4,7 +4,7 @@ const { fatal } = require('../services');
 
 const config = {
   server: {
-    PORT: process.env.PORT || 5000,
+    PORT: process.env.PORT || 5002,
     HOST: process.env.HOST || 'localhost',
   },
 
@@ -19,6 +19,10 @@ const config = {
     port: process.env.DB_PORT || fatal('FATAL: DB_PORT is not defined'),
     database: process.env.DB_NAME || fatal('FATAL: DB_NAME is not defined'),
     password: process.env.DB_PASS || fatal('FATAL: DB_PASS is not defined'),
+  },
+
+  tables: {
+    table1: process.env.TABLE_NAME || 'products',
   },
 
   folders: {

@@ -1,7 +1,7 @@
+/* eslint-disable no-plusplus */
 const fs = require('fs');
-const { db: dbConfig } = require('../config');
 
-const db = require('../db/pg')(dbConfig);
+const { createProduct } = require('../db/pg');
 
 const handleArray = (inputArray, outputArray) => {
   const handledArray = outputArray;
@@ -24,7 +24,7 @@ const handleArray = (inputArray, outputArray) => {
 
 const createNewInDB = async (type, color, quantity, price) => {
   try {
-    await db.createProduct({
+    await createProduct({
       type,
       color,
       quantity,
@@ -56,7 +56,7 @@ const jsontodb = filename => {
 
       inputProducts.forEach(e => {
         console.log('e :>> ', e);
-        db.createProduct({
+        createProduct({
           type: e.type || 'no type',
           color: e.color || 'no color',
           quantity: e.quantity || 0,

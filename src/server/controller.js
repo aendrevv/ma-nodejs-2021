@@ -20,6 +20,14 @@ const {
   folders: { UPLOAD },
 } = require('../config');
 
+const {
+  getProduct,
+  updateProduct,
+  getAllProducts,
+  softDeleteProduct,
+  hardDeleteProduct,
+} = require('../db/pg');
+
 let store = [];
 
 const promisifiedPipeline = promisify(pipeline);
@@ -96,7 +104,7 @@ const uploadCsv = async inputStream => {
   }
 
   const csvToJson = createCsvToJson();
-  const filepath = `${UPLOAD}${id}.json`;
+  const filepath = path.resolve(UPLOAD, `${id}.json`);
   console.log('filepath :>> ', filepath);
   const outputStream = fs.createWriteStream(filepath);
 
@@ -148,7 +156,7 @@ const fromJSONtoDB = async (req, res) => {
     await fs.promises.access(path.resolve(UPLOAD, filename));
     console.log('\nWaiting-jsontodb-\n');
     jsontodb(filename);
-    res.status(205).json({ message: '204 No Content' });
+    res.status(200).json({ message: '200 OK' });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: '500 Internal Server Error' });
@@ -161,8 +169,56 @@ const createOneInDB = async (req, res) => {
     await createNewInDB(type, color, price, quantity);
     res.status(200).json({ message: '200 OK' });
   } catch (err) {
-    console.error('CREATE >>>\n', err);
-    res.status(500).json({ message: '500 Internal Server Error: CREATE >>>' });
+    res.status(500).json({ message: '500 Internal Server Error: CREATE ' });
+  }
+};
+
+const getProductById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await getProduct(id);
+    res.status(200).json({ message: '200 OK', products: result });
+  } catch (err) {
+    res.status(500).json({ message: '500 Internal Server Error: GET ' });
+  }
+};
+
+const getAll = async (req, res) => {
+  try {
+    const result = await getAllProducts();
+    res.status(200).json({ message: '200 OK', products: result });
+  } catch (err) {
+    res.status(500).json({ message: '500 Internal Server Error: GET ALL ' });
+  }
+};
+
+const updateProductById = async (req, res) => {
+  const product = { ...req.body, id: req.params.id };
+  try {
+    await updateProduct(product);
+    res.status(200).json({ message: '200 OK' });
+  } catch (err) {
+    res.status(500).json({ message: '500 Internal Server Error: UPDATE ' });
+  }
+};
+
+const deleteProductByIdSoft = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await softDeleteProduct(id);
+    res.status(200).json({ message: '200 OK' });
+  } catch (err) {
+    res.status(500).json({ message: '500 Internal Server Error: DELETE ' });
+  }
+};
+
+const deleteProductByIdHard = async (req, res) => {
+  const { id } = req.params;
+  try {
+    await hardDeleteProduct(id);
+    res.status(200).json({ message: '200 OK' });
+  } catch (err) {
+    res.status(500).json({ message: '500 Internal Server Error: REMOVE ' });
   }
 };
 
@@ -179,4 +235,9 @@ module.exports = {
   optimizeJson,
   fromJSONtoDB,
   createOneInDB,
+  getProductById,
+  getAll,
+  updateProductById,
+  deleteProductByIdSoft,
+  deleteProductByIdHard,
 };
