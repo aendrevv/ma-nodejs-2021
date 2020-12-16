@@ -19,13 +19,15 @@ const {
 } = require('./controller');
 // PREVIOUS
 router.get('/', home);
+// UPLOAD
 router.put('/uploadcsv', convertCsvToJson);
 router.get('/upload/listOfFiles', getListOfFiles);
+router.put('/newjson', writeNewDataToJSON);
 router.post('/optimize/:filename', optimizeJson);
+// DISCOUNTS
 router.get('/blackfriday/async', blackFridayAsync);
 router.get('/blackfriday/clbck', blackFridayCallback);
 router.get('/blackfriday/prmss', blackFridayPromise);
-router.put('/newjson', writeNewDataToJSON);
 // DB
 router.post('/db/push/:filename', fromJSONtoDB);
 router.post('/db/create', createOneInDB);

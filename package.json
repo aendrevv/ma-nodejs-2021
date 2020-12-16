@@ -1,9 +1,9 @@
 {
-  "name": "homework-06",
+  "name": "homework-08",
   "author": "Andrii Tolmachov",
   "license": "MIT",
   "version": "1.0.1",
-  "description": "pg",
+  "description": "ORM. Sequilize.",
   "scripts": {
     "start": "nodemon src/app.js"
   },
@@ -17,7 +17,9 @@
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
     "nanoid": "^3.1.20",
-    "pg": "^8.5.1"
+    "pg": "^8.5.1",
+    "sequelize": "^6.3.5",
+    "sequelize-cli": "^6.2.0"
   },
   "devDependencies": {
     "eslint": "^7.12.0",

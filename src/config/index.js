@@ -13,7 +13,26 @@ const config = {
     PASSWORD: process.env.USER_PASSWORD || fatal('No user password'),
   },
 
-  db: {
+  db: 
+
+  seq: {
+    production: {
+      username: 'postgres',
+      password: 'postgres',
+      database: 'postgres',
+      host: '35.242.228.125',
+      port: process.env.DB_PORT || 5432,
+      dialect: 'postgres',
+      logging: false,
+      pool: {
+        max: 10,
+        min: 0,
+        idle: 5000,
+        acquire: 5000,
+        evict: 5000,
+      },
+    },
+  pg: {
     user: process.env.DB_USER || fatal('FATAL: DB_USER is not defined'),
     host: process.env.DB_HOST || fatal('FATAL: DB_HOST is not defined'),
     port: process.env.DB_PORT || fatal('FATAL: DB_PORT is not defined'),
