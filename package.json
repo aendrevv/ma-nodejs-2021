@@ -1,9 +1,9 @@
 {
-  "name": "homework-06",
+  "name": "homework-07",
   "author": "Andrii Tolmachov",
   "license": "MIT",
   "version": "1.0.1",
-  "description": "pg",
+  "description": "Query Builders. Knex. Relations.",
   "scripts": {
     "start": "nodemon src/app.js"
   },
@@ -16,6 +16,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-basic-auth": "^1.2.0",
+    "knex": "^0.21.13",
     "nanoid": "^3.1.20",
     "pg": "^8.5.1"
   },

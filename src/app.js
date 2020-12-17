@@ -1,22 +1,29 @@
 const { server } = require('./config');
 
+const db = require('./db');
+
 // const { testConnection, createProduct, deleteProduct, createTable } = require('./db/pg');
 
 const app = require('./server');
 
 const boot = async () => {
   try {
-    // await testConnection();
-    // await createTable();
+    await db.init();
+    console.log(`New DB type is ${db.getType()}`);
 
-    // await createProduct({
-    //   type: 'sword',
-    //   color: 'silver',
-    //   quantity: Date.now() % 39,
-    //   price: (Date.now() % 100) + 0.99,
-    // });
+    db.setType('knex');
+    console.log(`New DB type is ${db.getType()}`);
 
-    // await deleteProduct(61);
+    // await db.createTable();
+
+    await db.createProduct({
+      type: 'axe',
+      color: 'epic',
+      quantity: Date.now() % 10,
+      price: (Date.now() % 1000) + 0.99,
+    });
+
+    // await db.deleteProduct(61);
 
     app.listen(server.PORT, () => {
       console.log(`👾 App is listening at http://${server.HOST}:${server.PORT}`);
@@ -33,7 +40,7 @@ const exitHandler = async err => {
   if (err) console.error('EXIT >> ', err.message || '');
 
   console.log('INFO: Processing shutdown... ');
-  // await close();
+  await db.end();
   process.exit(1);
 };
 
