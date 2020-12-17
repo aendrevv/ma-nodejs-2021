@@ -1,13 +1,10 @@
+/* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable global-require */
-require('dotenv').config({ path: `${process.env.PWD}/.env` });
-
 const {
   db: { config, defaultType },
 } = require('../config');
-
-const { fatal } = require('../services');
 
 const db = {};
 let type = defaultType;
@@ -15,19 +12,18 @@ let type = defaultType;
 const funcWrapper = func =>
   typeof func === 'function'
     ? func
-    : fatal(`FATAL: Cannot find ${func.name} function for current DB wrapper`);
+    : console.log(`FATAL: Cannot find ${func.name} function for current DB wrapper`);
 
 const init = async () => {
   try {
     for (const [k, v] of Object.entries(config)) {
-      // eslint-disable-next-line import/no-dynamic-require
       const wrapper = require(`./${k}`)(v);
       await wrapper.testConnection();
       console.log(`INFO: DB wrapper for ${k} initialized.`);
       db[k] = wrapper;
     }
   } catch (err) {
-    fatal('FATAL: ', err.message || err);
+    console.log('FATAL: ', err.message || err);
   }
 };
 
