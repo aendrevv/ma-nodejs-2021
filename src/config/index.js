@@ -14,7 +14,7 @@ const config = {
   },
 
   db: {
-    defaultType: process.env.DB_WRAPPER || 'pg',
+    defaultType: process.env.DB_WRAPPER || 'knex',
     config: {
       pg: {
         user: process.env.DB_USER || fatal('FATAL: DB_USER is not defined'),
@@ -24,7 +24,7 @@ const config = {
         password: process.env.DB_PASS || fatal('FATAL: DB_PASS is not defined'),
       },
       knex: {
-        client: 'postgresql',
+        client: 'pg',
         connection: {
           user: process.env.DB_USER || fatal('FATAL: DB_USER is not defined'),
           host: process.env.DB_HOST || fatal('FATAL: DB_HOST is not defined'),

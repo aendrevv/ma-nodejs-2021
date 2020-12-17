@@ -1,6 +1,8 @@
 /* eslint-disable no-await-in-loop */
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable global-require */
+require('dotenv').config({ path: `${process.env.PWD}/.env` });
+
 const {
   db: { config, defaultType },
 } = require('../config');

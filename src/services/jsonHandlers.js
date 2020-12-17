@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
+require('dotenv').config({ path: `${process.env.PWD}/.env` });
 const fs = require('fs');
-
-const { createProduct } = require('../db/pg');
+const db = require('../db');
 
 const handleArray = (inputArray, outputArray) => {
   const handledArray = outputArray;
@@ -24,7 +24,7 @@ const handleArray = (inputArray, outputArray) => {
 
 const createNewInDB = async (type, color, quantity, price) => {
   try {
-    await createProduct({
+    await db.createProduct({
       type,
       color,
       quantity,
@@ -56,7 +56,7 @@ const jsontodb = filename => {
 
       inputProducts.forEach(e => {
         console.log('e :>> ', e);
-        createProduct({
+        db.createProduct({
           type: e.type || 'no type',
           color: e.color || 'no color',
           quantity: e.quantity || 0,
