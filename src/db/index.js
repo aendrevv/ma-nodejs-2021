@@ -60,6 +60,7 @@ module.exports = {
   createTable: async () => funcWrapper(dbWrapper().createTable)(),
   createProduct: async prod => funcWrapper(dbWrapper().createProduct)(prod),
   getProduct: async id => funcWrapper(dbWrapper().getProduct)(id),
+  getAllProducts: async () => funcWrapper(dbWrapper().getAllProducts)(),
   updateProduct: async prod => funcWrapper(dbWrapper().updateProduct)(prod),
   removeProduct: async id => funcWrapper(dbWrapper().hardDeleteProduct)(id),
   deleteProduct: async id => funcWrapper(dbWrapper().softDeleteProduct)(id),
