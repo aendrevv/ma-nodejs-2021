@@ -48,7 +48,7 @@ GET http://localhost:5002/upload/listOfFiles
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ### PUSH DB
-POST http://localhost:5002/db/push/opt-products.json
+POST http://localhost:5002/db/push/opt-z0ZB4J.json
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ### CREATE NEW ELEMENT IN DB

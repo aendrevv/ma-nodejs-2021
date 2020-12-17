@@ -1,7 +1,7 @@
 /* eslint-disable no-plusplus */
 const fs = require('fs');
 
-const { createProduct } = require('../db/pg');
+const { createProduct } = require('../db');
 
 const handleArray = (inputArray, outputArray) => {
   const handledArray = outputArray;
@@ -60,7 +60,7 @@ const jsontodb = filename => {
           type: e.type || 'no type',
           color: e.color || 'no color',
           quantity: e.quantity || 0,
-          price: e.price + 0.99,
+          price: +e.price + 0.99,
         })
           .then(() => {
             console.log('+');

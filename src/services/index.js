@@ -5,7 +5,6 @@ const myMap = require('./myMap');
 const { setDiscountAsync, setDiscountPromise, setDiscountCallback } = require('./discount');
 const { createCsvToJson } = require('./csvToJson');
 const { jsonOptimizer, jsontodb, createNewInDB } = require('./jsonHandlers');
-const fatal = require('./fatal');
 
 module.exports = {
   task1,
@@ -18,6 +17,5 @@ module.exports = {
   createCsvToJson,
   jsonOptimizer,
   jsontodb,
-  fatal,
   createNewInDB,
 };
