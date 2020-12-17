@@ -165,9 +165,9 @@ const fromJSONtoDB = async (req, res) => {
 };
 
 const createOneInDB = async (req, res) => {
-  const { type, color, price, quantity } = req.query;
+  const { type, color, quantity, price } = req.query;
   try {
-    await createNewInDB(type, color, price, quantity);
+    await createNewInDB(type, color, quantity, price);
     res.status(200).json({ message: '200 OK' });
   } catch (err) {
     res.status(500).json({ message: '500 Internal Server Error: CREATE ' });

@@ -1,24 +1,20 @@
 const { server } = require('./config');
 
 const db = require('./db');
-
-// const { testConnection, createProduct, deleteProduct, createTable } = require('./db/pg');
-
 const app = require('./server');
 
 const boot = async () => {
   try {
     await db.init();
+    console.log(`Current DB type is ${db.getType()}`);
+    db.setType('pg');
     console.log(`New DB type is ${db.getType()}`);
 
-    db.setType('knex');
-    console.log(`New DB type is ${db.getType()}`);
-
-    // await db.createTable();
+    await db.createTable();
 
     await db.createProduct({
       type: 'axe',
-      color: 'epic',
+      color: 'legendary',
       quantity: Date.now() % 10,
       price: (Date.now() % 1000) + 0.99,
     });

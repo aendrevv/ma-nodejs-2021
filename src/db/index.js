@@ -17,12 +17,10 @@ const funcWrapper = func =>
 const init = async () => {
   try {
     for (const [k, v] of Object.entries(config)) {
-      if (k === type) {
-        const wrapper = require(`./${k}`)(v);
-        await wrapper.testConnection();
-        console.log(`INFO: DB wrapper for ${k} initialized.`);
-        db[k] = wrapper;
-      }
+      const wrapper = require(`./${k}`)(v);
+      await wrapper.testConnection();
+      console.log(`INFO: DB wrapper for ${k} initialized.`);
+      db[k] = wrapper;
     }
   } catch (err) {
     console.log('FATAL: ', err.message || err);
@@ -59,8 +57,10 @@ module.exports = {
   //---------------------------
   testConnection: async () => funcWrapper(dbWrapper().testConnection)(),
   close: async () => funcWrapper(dbWrapper().close)(),
+  createTable: async () => funcWrapper(dbWrapper().createTable)(),
   createProduct: async prod => funcWrapper(dbWrapper().createProduct)(prod),
   getProduct: async id => funcWrapper(dbWrapper().getProduct)(id),
+  getAllProducts: async () => funcWrapper(dbWrapper().getAllProducts)(),
   updateProduct: async prod => funcWrapper(dbWrapper().updateProduct)(prod),
   removeProduct: async id => funcWrapper(dbWrapper().hardDeleteProduct)(id),
   deleteProduct: async id => funcWrapper(dbWrapper().softDeleteProduct)(id),
