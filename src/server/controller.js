@@ -21,12 +21,13 @@ const {
 } = require('../config');
 
 const {
+  testConnection,
   getProduct,
   updateProduct,
   getAllProducts,
   softDeleteProduct,
   hardDeleteProduct,
-} = require('../db/pg');
+} = require('../db');
 
 let store = [];
 
@@ -202,7 +203,7 @@ const updateProductById = async (req, res) => {
   }
 };
 
-const deleteProductByIdSoft = async (req, res) => {
+const deleteProduct = async (req, res) => {
   const { id } = req.params;
   try {
     await softDeleteProduct(id);
@@ -212,13 +213,22 @@ const deleteProductByIdSoft = async (req, res) => {
   }
 };
 
-const deleteProductByIdHard = async (req, res) => {
+const removeProduct = async (req, res) => {
   const { id } = req.params;
   try {
     await hardDeleteProduct(id);
     res.status(200).json({ message: '200 OK' });
   } catch (err) {
     res.status(500).json({ message: '500 Internal Server Error: REMOVE ' });
+  }
+};
+
+const testc = async (req, res) => {
+  try {
+    await testConnection();
+    res.status(200).json({ message: '200 OK' });
+  } catch (err) {
+    res.status(500).json({ message: '500 Internal Server Error: TESTCON ' });
   }
 };
 
@@ -238,6 +248,7 @@ module.exports = {
   getProductById,
   getAll,
   updateProductById,
-  deleteProductByIdSoft,
-  deleteProductByIdHard,
+  deleteProduct,
+  removeProduct,
+  testc,
 };

@@ -1,6 +1,9 @@
 require('dotenv').config();
 
-const { fatal } = require('../services');
+const fatal = message => {
+  console.error(message);
+  process.exit(1);
+};
 
 const config = {
   server: {
@@ -36,7 +39,7 @@ const config = {
           min: 2,
           max: 10,
         },
-        debug: true,
+        debug: false,
       },
     },
   },

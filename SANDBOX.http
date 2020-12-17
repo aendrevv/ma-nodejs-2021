@@ -52,7 +52,7 @@ POST http://localhost:5002/db/push/opt-products.json
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ### CREATE NEW ELEMENT IN DB
-POST http://localhost:5002/db/create?type=boots&color=white&price=123
+POST http://localhost:5002/db/create?type=spear&color=brilliant&price=9000
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ###
@@ -60,7 +60,7 @@ GET http://localhost:5002/db/getAll
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ###
-GET http://localhost:5002/db/get/63
+GET http://localhost:5002/db/get/105
 Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ###
@@ -77,4 +77,8 @@ Authorization:Basic TWFzdGVyczpBY2FkZW15
 
 ###
 DELETE http://localhost:5002/db/remove/61
+Authorization:Basic TWFzdGVyczpBY2FkZW15
+
+### TEST CONNECTION
+GET http://localhost:5002/db/
 Authorization:Basic TWFzdGVyczpBY2FkZW15

@@ -17,10 +17,12 @@ const funcWrapper = func =>
 const init = async () => {
   try {
     for (const [k, v] of Object.entries(config)) {
-      const wrapper = require(`./${k}`)(v);
-      await wrapper.testConnection();
-      console.log(`INFO: DB wrapper for ${k} initialized.`);
-      db[k] = wrapper;
+      if (k === type) {
+        const wrapper = require(`./${k}`)(v);
+        await wrapper.testConnection();
+        console.log(`INFO: DB wrapper for ${k} initialized.`);
+        db[k] = wrapper;
+      }
     }
   } catch (err) {
     console.log('FATAL: ', err.message || err);
