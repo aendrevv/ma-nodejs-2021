@@ -7,10 +7,10 @@ module.exports = config => {
   const client = new Pool(config);
 
   return {
-    createTable: async () => {
+    createTable: async tablename => {
       try {
         await client.query(
-          `CREATE TABLE IF NOT EXISTS ${table}(
+          `CREATE TABLE IF NOT EXISTS ${tablename}(
           id INT GENERATED ALWAYS AS IDENTITY,
           type VARCHAR(255),
           color VARCHAR(255),

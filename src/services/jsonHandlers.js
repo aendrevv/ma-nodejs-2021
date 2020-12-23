@@ -27,8 +27,8 @@ const createNewInDB = async (type, color, quantity, price) => {
     await db.createProduct({
       type,
       color,
-      quantity,
       price: price + 0.99,
+      quantity,
     });
   } catch (err) {
     console.error('NEW IN DB', err.message || 'errorr');

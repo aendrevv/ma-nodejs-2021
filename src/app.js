@@ -7,17 +7,17 @@ const boot = async () => {
   try {
     await db.init();
     console.log(`Current DB type is ${db.getType()}`);
-    db.setType('pg');
+    db.setType('knex');
     console.log(`New DB type is ${db.getType()}`);
 
-    await db.createTable();
+    await db.createTables();
 
-    await db.createProduct({
-      type: 'axe',
-      color: 'legendary',
-      quantity: Date.now() % 10,
-      price: (Date.now() % 1000) + 0.99,
-    });
+    // await db.createProduct({
+    //   type: 'axe',
+    //   color: 'legendary',
+    //   quantity: Date.now() % 10,
+    //   price: (Date.now() % 1000) + 0.99,
+    // });
 
     // await db.deleteProduct(61);
 

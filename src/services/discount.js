@@ -1,7 +1,7 @@
 require('dotenv').config();
 
 const myMap = require('./myMap');
-const arrayModifier = require('./task3');
+const arrayModifier = require('./tasks');
 
 const maxDiscount = +process.env.MAXDISCOUNT || 20;
 const delay = +process.env.DELAY || 50;
